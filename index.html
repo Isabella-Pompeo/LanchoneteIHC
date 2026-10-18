@@ -1,417 +1,1225 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sabor & Decisão - Lanchonete Inteligente</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            colors: {
-              brand: {
-                50: "#fff1f2",
-                100: "#ffe4e6",
-                500: "#f43f5e",
-                600: "#e11d48",
-                700: "#be123c",
-              },
-              amberGlow: "#f59e0b",
-            },
-            fontFamily: {
-              sans: ["Inter", "sans-serif"],
-            },
-          },
-        },
-      };
-    </script>
-    <!-- FontAwesome Icons -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
-    <!-- Google Fonts Inter -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
+    <title>Decisão & Sabor - Lanchonete IHC</title>
     <style>
+      /* ==========================================================================
+           1. DESIGN TOKENS & CSS VARIABLES
+           ========================================================================== */
+      :root {
+        /* Palette - Light Theme */
+        --bg-main: #f8fafc;
+        --bg-card: #ffffff;
+        --bg-subtle: #f1f5f9;
+        --bg-input: #ffffff;
+        --border-color: #e2e8f0;
+        --border-hover: #cbd5e1;
+
+        --text-primary: #0f172a;
+        --text-secondary: #475569;
+        --text-muted: #94a3b8;
+
+        --brand-primary: #e11d48;
+        --brand-primary-hover: #be123c;
+        --brand-subtle: #ffe4e6;
+        --brand-text: #9f1239;
+
+        --accent-amber: #d97706;
+        --accent-amber-subtle: #fef3c7;
+        --accent-green: #16a34a;
+        --accent-green-subtle: #dcfce7;
+
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+        --shadow-md:
+          0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+        --shadow-lg:
+          0 10px 25px -5px rgba(0, 0, 0, 0.1),
+          0 8px 10px -6px rgba(0, 0, 0, 0.05);
+
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --radius-lg: 18px;
+        --radius-full: 9999px;
+
+        --transition-speed: 0.25s;
+        --font-family:
+          system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Oxygen, Ubuntu, Cantarell, sans-serif;
+      }
+
+      /* Palette - Dark Theme */
+      [data-theme="dark"] {
+        --bg-main: #0f172a;
+        --bg-card: #1e293b;
+        --bg-subtle: #334155;
+        --bg-input: #0f172a;
+        --border-color: #334155;
+        --border-hover: #475569;
+
+        --text-primary: #f8fafc;
+        --text-secondary: #cbd5e1;
+        --text-muted: #64748b;
+
+        --brand-primary: #f43f5e;
+        --brand-primary-hover: #fb7185;
+        --brand-subtle: #4c0519;
+        --brand-text: #fecdd3;
+
+        --accent-amber: #f59e0b;
+        --accent-amber-subtle: #451a03;
+        --accent-green: #22c55e;
+        --accent-green-subtle: #052e16;
+
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+        --shadow-md: 0 4px 10px rgba(0, 0, 0, 0.4);
+        --shadow-lg: 0 12px 30px rgba(0, 0, 0, 0.5);
+      }
+
+      /* ==========================================================================
+           2. BASE STYLES & RESET
+           ========================================================================== */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
       body {
-        font-family: "Inter", sans-serif;
+        font-family: var(--font-family);
+        background-color: var(--bg-main);
+        color: var(--text-primary);
+        line-height: 1.5;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
         transition:
-          background-color 0.3s,
-          color 0.3s;
+          background-color var(--transition-speed),
+          color var(--transition-speed);
       }
-      .card-glow:hover {
-        box-shadow: 0 10px 25px -5px rgba(244, 63, 94, 0.25);
+
+      /* Inline SVG Icon Utilities */
+      .svg-icon {
+        width: 1.25rem;
+        height: 1.25rem;
+        fill: currentColor;
+        display: inline-block;
+        vertical-align: middle;
       }
-      /* Custom Scrollbar */
-      ::-webkit-scrollbar {
-        width: 8px;
+      .svg-icon-lg {
+        width: 2.5rem;
+        height: 2.5rem;
+      }
+
+      /* ==========================================================================
+           3. HEADER & NAVBAR
+           ========================================================================== */
+      .header {
+        position: sticky;
+        top: 0;
+        z-index: 40;
+        background-color: var(--bg-card);
+        border-bottom: 1px solid var(--border-color);
+        box-shadow: var(--shadow-sm);
+        transition: background-color var(--transition-speed);
+      }
+
+      .header-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1.5rem;
+        height: 70px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        cursor: pointer;
+        text-decoration: none;
+        color: inherit;
+      }
+
+      .brand-badge {
+        width: 42px;
+        height: 42px;
+        border-radius: var(--radius-md);
+        background: linear-gradient(
+          135deg,
+          var(--brand-primary),
+          var(--accent-amber)
+        );
+        color: #ffffff;
+        font-weight: 800;
+        font-size: 1.2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 10px rgba(225, 29, 72, 0.3);
+      }
+
+      .brand-title {
+        font-size: 1.15rem;
+        font-weight: 800;
+        line-height: 1.1;
+      }
+
+      .brand-subtitle {
+        font-size: 0.75rem;
+        color: var(--brand-primary);
+        font-weight: 600;
+      }
+
+      .nav-controls {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .nav-tabs {
+        display: flex;
+        background-color: var(--bg-subtle);
+        padding: 4px;
+        border-radius: var(--radius-md);
+        gap: 4px;
+      }
+
+      .nav-tab-btn {
+        background: none;
+        border: none;
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        transition: all var(--transition-speed);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .nav-tab-btn.active {
+        background-color: var(--bg-card);
+        color: var(--brand-primary);
+        box-shadow: var(--shadow-sm);
+      }
+
+      .btn-icon {
+        background: none;
+        border: 1px solid var(--border-color);
+        color: var(--text-secondary);
+        width: 40px;
+        height: 40px;
+        border-radius: var(--radius-md);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all var(--transition-speed);
+        position: relative;
+      }
+
+      .btn-icon:hover {
+        background-color: var(--bg-subtle);
+        color: var(--text-primary);
+        border-color: var(--border-hover);
+      }
+
+      .cart-count {
+        position: absolute;
+        top: -4px;
+        right: -4px;
+        background-color: var(--brand-primary);
+        color: #ffffff;
+        font-size: 0.7rem;
+        font-weight: 800;
+        width: 20px;
+        height: 20px;
+        border-radius: var(--radius-full);
+        display: flex;
+        align-items: center;
+        justify-content: justify-center;
+        border: 2px solid var(--bg-card);
+      }
+
+      .cart-count.hidden {
+        display: none;
+      }
+
+      /* ==========================================================================
+           4. MAIN LAYOUT & VIEWS
+           ========================================================================== */
+      .main-content {
+        max-width: 1200px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+        flex: 1;
+      }
+
+      .view-section {
+        display: none;
+        animation: fadeIn 0.3s ease-in-out;
+      }
+
+      .view-section.active {
+        display: block;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(6px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .section-header {
+        text-align: center;
+        max-width: 600px;
+        margin: 0 auto 2rem auto;
+      }
+
+      .section-tag {
+        display: inline-block;
+        background-color: var(--accent-amber-subtle);
+        color: var(--accent-amber);
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 0.25rem 0.75rem;
+        border-radius: var(--radius-full);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.5rem;
+      }
+
+      .section-title {
+        font-size: 1.75rem;
+        font-weight: 800;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+      }
+
+      .section-desc {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+      }
+
+      /* ==========================================================================
+           5. WIZARD / ASSISTENTE DE ESCOLHA
+           ========================================================================== */
+      .wizard-card {
+        max-width: 720px;
+        margin: 0 auto;
+        background-color: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-lg);
+        padding: 2rem;
+        box-shadow: var(--shadow-lg);
+        transition: background-color var(--transition-speed);
+      }
+
+      .wizard-progress {
+        margin-bottom: 2rem;
+      }
+
+      .progress-info {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--text-secondary);
+        margin-bottom: 0.5rem;
+      }
+
+      .progress-bar-bg {
+        width: 100%;
         height: 8px;
+        background-color: var(--bg-subtle);
+        border-radius: var(--radius-full);
+        overflow: hidden;
       }
-      ::-webkit-scrollbar-track {
-        background: transparent;
+
+      .progress-bar-fill {
+        height: 100%;
+        background-color: var(--brand-primary);
+        width: 25%;
+        transition: width var(--transition-speed) ease;
       }
-      ::-webkit-scrollbar-thumb {
-        background: #cbd5e1;
-        border-radius: 9999px;
+
+      .wizard-question-title {
+        font-size: 1.15rem;
+        font-weight: 700;
+        margin-bottom: 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--text-primary);
       }
-      .dark ::-webkit-scrollbar-thumb {
-        background: #475569;
+
+      .options-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .option-btn {
+        background-color: var(--bg-card);
+        border: 2px solid var(--border-color);
+        border-radius: var(--radius-md);
+        padding: 1.25rem;
+        text-align: left;
+        cursor: pointer;
+        transition: all var(--transition-speed);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 130px;
+        color: inherit;
+      }
+
+      .option-btn:hover {
+        border-color: var(--brand-primary);
+        background-color: var(--brand-subtle);
+        transform: translateY(-2px);
+      }
+
+      .option-btn.selected {
+        border-color: var(--brand-primary);
+        background-color: var(--brand-subtle);
+        box-shadow: 0 0 0 1px var(--brand-primary);
+      }
+
+      .option-icon {
+        font-size: 1.75rem;
+        margin-bottom: 0.75rem;
+      }
+
+      .option-name {
+        font-weight: 700;
+        font-size: 1rem;
+        color: var(--text-primary);
+      }
+
+      .option-desc {
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+        margin-top: 0.25rem;
+      }
+
+      .wizard-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 1.25rem;
+        border-top: 1px solid var(--border-color);
+      }
+
+      .btn {
+        padding: 0.65rem 1.25rem;
+        border-radius: var(--radius-md);
+        font-size: 0.875rem;
+        font-weight: 700;
+        cursor: pointer;
+        border: none;
+        transition: all var(--transition-speed);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-decoration: none;
+      }
+
+      .btn-primary {
+        background-color: var(--brand-primary);
+        color: #ffffff;
+        box-shadow: var(--shadow-sm);
+      }
+
+      .btn-primary:hover {
+        background-color: var(--brand-primary-hover);
+        box-shadow: var(--shadow-md);
+      }
+
+      .btn-ghost {
+        background: none;
+        color: var(--text-secondary);
+        border: 1px solid transparent;
+      }
+
+      .btn-ghost:hover {
+        background-color: var(--bg-subtle);
+        color: var(--text-primary);
+      }
+
+      /* Result Display Card */
+      .result-box {
+        margin-top: 1.5rem;
+        background: linear-gradient(
+          135deg,
+          var(--brand-primary),
+          var(--accent-amber)
+        );
+        padding: 3px;
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-lg);
+        animation: zoomIn 0.3s ease;
+      }
+
+      @keyframes zoomIn {
+        from {
+          opacity: 0;
+          transform: scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      .result-inner {
+        background-color: var(--bg-card);
+        border-radius: calc(var(--radius-lg) - 3px);
+        padding: 2rem;
+      }
+
+      .result-header-badge {
+        display: inline-block;
+        background-color: var(--brand-subtle);
+        color: var(--brand-text);
+        font-size: 0.75rem;
+        font-weight: 800;
+        padding: 0.35rem 0.85rem;
+        border-radius: var(--radius-full);
+        text-transform: uppercase;
+        margin-bottom: 1rem;
+      }
+
+      .result-content {
+        display: flex;
+        gap: 1.5rem;
+        align-items: center;
+      }
+
+      .result-icon-wrapper {
+        width: 90px;
+        height: 90px;
+        border-radius: var(--radius-md);
+        background-color: var(--bg-subtle);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        flex-shrink: 0;
+      }
+
+      .result-details {
+        flex: 1;
+      }
+
+      .result-title {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: var(--text-primary);
+      }
+
+      .result-price {
+        font-size: 1.35rem;
+        font-weight: 800;
+        color: var(--brand-primary);
+        margin: 0.25rem 0;
+      }
+
+      .result-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.35rem;
+        margin-top: 0.75rem;
+      }
+
+      .tag {
+        background-color: var(--bg-subtle);
+        color: var(--text-secondary);
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 0.2rem 0.6rem;
+        border-radius: var(--radius-sm);
+      }
+
+      /* Easter Egg Styling for MINGUAU COM SAL */
+      .meme-alert {
+        background-color: #fef2f2;
+        border: 2px dashed #ef4444;
+        color: #991b1b;
+        padding: 1rem;
+        border-radius: var(--radius-md);
+        margin-top: 1rem;
+        font-size: 0.85rem;
+        font-weight: 600;
+      }
+      [data-theme="dark"] .meme-alert {
+        background-color: #450a0a;
+        color: #fca5a5;
+      }
+
+      /* ==========================================================================
+           6. CARDÁPIO COMPLETO
+           ========================================================================== */
+      .menu-toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+      }
+
+      .search-input-wrapper {
+        position: relative;
+        flex: 1;
+        min-width: 240px;
+      }
+
+      .search-input {
+        width: 100%;
+        padding: 0.65rem 1rem 0.65rem 2.5rem;
+        border-radius: var(--radius-md);
+        border: 1px solid var(--border-color);
+        background-color: var(--bg-input);
+        color: var(--text-primary);
+        font-size: 0.875rem;
+        outline: none;
+        transition: border-color var(--transition-speed);
+      }
+
+      .search-input:focus {
+        border-color: var(--brand-primary);
+      }
+
+      .search-icon {
+        position: absolute;
+        left: 0.85rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-muted);
+        pointer-events: none;
+      }
+
+      .filter-select {
+        padding: 0.65rem 1rem;
+        border-radius: var(--radius-md);
+        border: 1px solid var(--border-color);
+        background-color: var(--bg-input);
+        color: var(--text-primary);
+        font-size: 0.875rem;
+        outline: none;
+        cursor: pointer;
+      }
+
+      .menu-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 1.25rem;
+      }
+
+      .food-card {
+        background-color: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-lg);
+        padding: 1.25rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        box-shadow: var(--shadow-sm);
+        transition:
+          transform var(--transition-speed),
+          box-shadow var(--transition-speed),
+          border-color var(--transition-speed);
+      }
+
+      .food-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-md);
+        border-color: var(--border-hover);
+      }
+
+      .food-card-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        margin-bottom: 0.75rem;
+      }
+
+      .food-emoji {
+        font-size: 2.25rem;
+        line-height: 1;
+      }
+
+      .food-name {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 0.25rem;
+      }
+
+      .food-desc {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        margin-bottom: 1rem;
+      }
+
+      .food-card-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 0.75rem;
+        border-top: 1px solid var(--border-color);
+        margin-top: auto;
+      }
+
+      .food-price {
+        font-size: 1.1rem;
+        font-weight: 800;
+        color: var(--text-primary);
+      }
+
+      /* ==========================================================================
+           7. MATRIZ IHC - VISÃO TABELA ORIGINAL
+           ========================================================================== */
+      .table-wrapper {
+        background-color: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        box-shadow: var(--shadow-md);
+      }
+
+      .table-responsive {
+        overflow-x: auto;
+      }
+
+      .ihc-table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+        font-size: 0.875rem;
+      }
+
+      .ihc-table th {
+        background-color: var(--bg-subtle);
+        color: var(--text-primary);
+        font-weight: 700;
+        padding: 1rem;
+        border-bottom: 2px solid var(--border-color);
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.05em;
+      }
+
+      .ihc-table td {
+        padding: 0.85rem 1rem;
+        border-bottom: 1px solid var(--border-color);
+        color: var(--text-secondary);
+      }
+
+      .ihc-table tbody tr:nth-child(even) {
+        background-color: rgba(0, 0, 0, 0.015);
+      }
+      [data-theme="dark"] .ihc-table tbody tr:nth-child(even) {
+        background-color: rgba(255, 255, 255, 0.02);
+      }
+
+      .ihc-table tbody tr:hover {
+        background-color: var(--brand-subtle);
+        color: var(--text-primary);
+      }
+
+      .ihc-table tbody tr.row-meme {
+        background-color: var(--accent-amber-subtle);
+        font-weight: 700;
+      }
+
+      .food-cell {
+        font-weight: 700;
+        color: var(--brand-primary);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      /* ==========================================================================
+           8. CARRINHO DE PEDIDOS (MODAL SLIDE-OVER)
+           ========================================================================== */
+      .cart-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(4px);
+        z-index: 50;
+        display: none;
+        justify-content: flex-end;
+        animation: fadeIn 0.2s ease;
+      }
+
+      .cart-overlay.open {
+        display: flex;
+      }
+
+      .cart-drawer {
+        width: 100%;
+        max-width: 400px;
+        height: 100%;
+        background-color: var(--bg-card);
+        box-shadow: var(--shadow-lg);
+        display: flex;
+        flex-direction: column;
+        padding: 1.5rem;
+        animation: slideLeft 0.25s ease;
+      }
+
+      @keyframes slideLeft {
+        from {
+          transform: translateX(100%);
+        }
+        to {
+          transform: translateX(0);
+        }
+      }
+
+      .cart-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .cart-title {
+        font-size: 1.2rem;
+        font-weight: 800;
+      }
+
+      .cart-body {
+        flex: 1;
+        overflow-y: auto;
+        padding: 1rem 0;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .cart-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.85rem;
+        background-color: var(--bg-subtle);
+        border-radius: var(--radius-md);
+      }
+
+      .cart-item-info {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .cart-item-name {
+        font-weight: 700;
+        font-size: 0.9rem;
+      }
+
+      .cart-item-price {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+      }
+
+      .cart-controls {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .cart-qty-btn {
+        width: 26px;
+        height: 26px;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--border-color);
+        background-color: var(--bg-card);
+        color: var(--text-primary);
+        font-weight: 700;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .cart-footer {
+        padding-top: 1rem;
+        border-top: 1px solid var(--border-color);
+      }
+
+      .cart-total-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 1.1rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+      }
+
+      .empty-cart-msg {
+        text-align: center;
+        color: var(--text-muted);
+        margin: auto 0;
+        font-size: 0.9rem;
+      }
+
+      /* ==========================================================================
+           9. TOAST NOTIFICATION
+           ========================================================================== */
+      .toast {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: var(--text-primary);
+        color: var(--bg-main);
+        padding: 0.85rem 1.25rem;
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-lg);
+        font-weight: 600;
+        font-size: 0.875rem;
+        z-index: 60;
+        transform: translateY(100px);
+        opacity: 0;
+        transition: all 0.3s ease;
+        pointer-events: none;
+      }
+
+      .toast.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      /* Responsive Fixes */
+      @media (max-width: 640px) {
+        .header-container {
+          padding: 0 1rem;
+        }
+        .nav-tab-btn span {
+          display: none;
+        }
+        .nav-tab-btn {
+          padding: 0.5rem;
+        }
+        .result-content {
+          flex-direction: column;
+          text-align: center;
+        }
+        .result-tags {
+          justify-content: center;
+        }
       }
     </style>
   </head>
-  <body
-    class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 min-h-screen flex flex-col transition-colors duration-200"
-  >
-    <!-- Header / Navbar -->
-    <header
-      class="sticky top-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-sm"
-    >
-      <div
-        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between"
-      >
-        <div
-          class="flex items-center space-x-3 cursor-pointer"
-          onclick="switchView('wizard')"
-        >
-          <div
-            class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-amber-500 flex items-center justify-center text-white font-black text-xl shadow-md"
-          >
-            S&D
-          </div>
+  <body>
+    <!-- HEADER / NAVIGATION -->
+    <header class="header">
+      <div class="header-container">
+        <a class="brand" onclick="switchTab('wizard')">
+          <div class="brand-badge">D&S</div>
           <div>
-            <h1
-              class="font-bold text-lg leading-none text-slate-900 dark:text-white"
-            >
-              Sabor & Decisão
-            </h1>
-            <p class="text-xs text-brand-600 dark:text-brand-400 font-medium">
-              Lanchonete IHC Experimental
-            </p>
+            <div class="brand-title">Decisão & Sabor</div>
+            <div class="brand-subtitle">Lanchonete IHC</div>
           </div>
-        </div>
+        </a>
 
-        <!-- Navigation Links & Actions -->
-        <div class="flex items-center space-x-2 sm:space-x-4">
-          <nav
-            class="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl text-xs sm:text-sm font-medium"
-          >
+        <div class="nav-controls">
+          <nav class="nav-tabs">
             <button
-              id="nav-wizard"
-              onclick="switchView('wizard')"
-              class="px-3 py-1.5 rounded-lg transition-all text-slate-600 dark:text-slate-300"
+              id="tab-btn-wizard"
+              class="nav-tab-btn active"
+              onclick="switchTab('wizard')"
             >
-              <i class="fa-solid fa-wand-magic-sparkles mr-1"></i>
-              <span class="hidden sm:inline">Assistente</span>
+              <svg class="svg-icon" viewBox="0 0 24 24">
+                <path
+                  d="M7.5 5.6L5 7l1.4-2.5L5 2l2.5 1.4L10 2 8.6 4.5 10 7 7.5 5.6zm12 9.8L17 14l1.4 2.5L17 19l2.5-1.4L22 19l-1.4-2.5L22 14l-2.5 1.4zM22 2l-2.5 1.4L17 2l1.4 2.5L17 7l2.5-1.4L22 7l-1.4-2.5L22 2zM13.34 10.74l-8.6 8.6-1.48-1.48 8.6-8.6 1.48 1.48zm2.83-2.83l-1.41-1.41c-.39-.39-1.03-.39-1.41 0l-1.06 1.06 2.83 2.83 1.06-1.06c.38-.39.38-1.03 0-1.42z"
+                />
+              </svg>
+              <span>Assistente</span>
             </button>
             <button
-              id="nav-menu"
-              onclick="switchView('menu')"
-              class="px-3 py-1.5 rounded-lg transition-all text-slate-600 dark:text-slate-300"
+              id="tab-btn-menu"
+              class="nav-tab-btn"
+              onclick="switchTab('menu')"
             >
-              <i class="fa-solid fa-utensils mr-1"></i>
-              <span class="hidden sm:inline">Cardápio</span>
+              <svg class="svg-icon" viewBox="0 0 24 24">
+                <path
+                  d="M8.1 13.34l2.83-2.83-6.36-6.36c-.78-.78-2.05-.78-2.83 0-.78.78-.78 2.05 0 2.83l6.36 6.36zm10.61 2.83c.83-.83.83-2.17 0-3l-2.42-2.42 2.83-2.83c.39-.39.39-1.02 0-1.41-.39-.39-1.02-.39-1.41 0l-2.83 2.83-2.42-2.42c-.83-.83-2.17-.83-3 0l-1.41 1.41 10.6 10.6 1.41-1.41zM2 21h10v-2H2v2z"
+                />
+              </svg>
+              <span>Cardápio</span>
             </button>
             <button
-              id="nav-table"
-              onclick="switchView('table')"
-              class="px-3 py-1.5 rounded-lg transition-all text-slate-600 dark:text-slate-300"
+              id="tab-btn-table"
+              class="nav-tab-btn"
+              onclick="switchTab('table')"
             >
-              <i class="fa-solid fa-table-cells mr-1"></i>
-              <span class="hidden sm:inline">Matriz IHC</span>
+              <svg class="svg-icon" viewBox="0 0 24 24">
+                <path
+                  d="M4 3h16c1.1 0 2 .9 2 2v14c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V5c0-1.1.9-2 2-2zm0 4h4v4H4V7zm6 0h4v4h-4V7zm6 0h4v4h-4V7zM4 13h4v4H4v-4zm6 0h4v4h-4v-4zm6 0h4v4h-4v-4z"
+                />
+              </svg>
+              <span>Matriz IHC</span>
             </button>
           </nav>
 
-          <!-- Dark Mode Toggle -->
+          <!-- Theme Toggle Button -->
           <button
-            id="theme-toggle"
-            onclick="toggleDarkMode()"
-            class="p-2.5 rounded-xl text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 transition"
+            class="btn-icon"
+            onclick="toggleTheme()"
+            title="Alternar Tema"
           >
-            <i id="theme-icon" class="fa-solid fa-moon"></i>
+            <svg
+              id="theme-icon-sun"
+              class="svg-icon"
+              style="display: none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41l-1.06-1.06zm1.06-10.96c.39-.39.39-1.03 0-1.41s-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36c.39-.39.39-1.03 0-1.41s-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"
+              />
+            </svg>
+            <svg id="theme-icon-moon" class="svg-icon" viewBox="0 0 24 24">
+              <path
+                d="M12.3 2c.43 0 .77.35.72.78-.12.98.05 1.98.52 2.87.97 1.86 2.87 3.01 4.98 3.01.62 0 1.24-.1 1.84-.29.42-.13.85.22.75.65-.96 3.92-4.48 6.84-8.68 6.84-4.97 0-9-4.03-9-9 0-4.2 2.92-7.72 6.84-8.68.12-.03.25-.03.37-.03z"
+              />
+            </svg>
           </button>
 
-          <!-- Cart Button -->
-          <button
-            onclick="toggleCartModal()"
-            class="relative p-2.5 rounded-xl bg-brand-50 text-brand-600 hover:bg-brand-100 dark:bg-brand-950/50 dark:text-brand-400 transition"
-          >
-            <i class="fa-solid fa-cart-shopping"></i>
-            <span
-              id="cart-badge"
-              class="absolute -top-1 -right-1 bg-brand-600 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center hidden"
-              >0</span
-            >
+          <!-- Cart Toggle Button -->
+          <button class="btn-icon" onclick="toggleCart()" title="Carrinho">
+            <svg class="svg-icon" viewBox="0 0 24 24">
+              <path
+                d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"
+              />
+            </svg>
+            <span id="cart-badge" class="cart-count hidden">0</span>
           </button>
         </div>
       </div>
     </header>
 
-    <!-- Main Content Area -->
-    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <!-- VIEW 1: ASSISTENTE DE DECISÃO PASSO A PASSO (WIZARD) -->
-      <section id="view-wizard" class="max-w-3xl mx-auto space-y-6">
-        <div class="text-center space-y-2">
-          <span
-            class="px-3 py-1 bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300 rounded-full text-xs font-semibold tracking-wide uppercase"
-          >
-            Interação Humano-Computador
-          </span>
-          <h2
-            class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white"
-          >
-            O que você deseja comer hoje?
-          </h2>
-          <p class="text-sm text-slate-500 dark:text-slate-400">
-            Responda a 4 perguntas e nossa matriz de decisão encontrará o prato
-            perfeito.
+    <!-- MAIN APP CONTENT -->
+    <main class="main-content">
+      <!-- VIEW 1: RECOMENDADOR IHC (WIZARD) -->
+      <section id="view-wizard" class="view-section active">
+        <div class="section-header">
+          <span class="section-tag">Interação Humano-Computador</span>
+          <h2 class="section-title">O que você gostaria de comer?</h2>
+          <p class="section-desc">
+            Selecione seus critérios no quiz de decisão e descubra a
+            recomendação exata da matriz IHC.
           </p>
         </div>
 
-        <!-- Progress Indicator -->
-        <div
-          class="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm"
-        >
-          <div
-            class="flex justify-between text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2"
-          >
-            <span id="step-label">Passo 1 de 4</span>
-            <span id="step-title" class="text-brand-600 dark:text-brand-400"
-              >Sabor</span
-            >
+        <div class="wizard-card">
+          <!-- Progress -->
+          <div class="wizard-progress">
+            <div class="progress-info">
+              <span id="wizard-step-indicator">Passo 1 de 4</span>
+              <span id="wizard-step-label" style="color: var(--brand-primary)"
+                >Sabor</span
+              >
+            </div>
+            <div class="progress-bar-bg">
+              <div id="wizard-progress-bar" class="progress-bar-fill"></div>
+            </div>
           </div>
-          <div
-            class="w-full bg-slate-100 dark:bg-slate-700 h-2.5 rounded-full overflow-hidden"
-          >
-            <div
-              id="step-bar"
-              class="bg-brand-600 h-full w-1/4 transition-all duration-300"
-            ></div>
-          </div>
-        </div>
 
-        <!-- Step Cards Box -->
-        <div
-          class="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-xl min-h-[360px] flex flex-col justify-between"
-        >
           <!-- Step 1: Sabor -->
-          <div id="wizard-step-1" class="wizard-step space-y-6">
-            <h3
-              class="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2"
-            >
-              <i class="fa-solid fa-utensils text-brand-600"></i> Qual o seu
-              desejo de sabor agora?
-            </h3>
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div id="step-1" class="wizard-step">
+            <div class="wizard-question-title">
+              1. Qual é a preferência de sabor?
+            </div>
+            <div class="options-grid">
               <button
-                onclick="selectOption('sabor', 'Salgado')"
-                class="option-btn p-5 rounded-2xl border-2 border-slate-200 dark:border-slate-700 hover:border-brand-500 dark:hover:border-brand-500 hover:bg-brand-50/50 dark:hover:bg-slate-700/50 text-left transition duration-200 flex flex-col justify-between h-36"
+                class="option-btn"
+                onclick="setWizardOption('sabor', 'Salgado')"
               >
-                <i class="fa-solid fa-pizza-slice text-3xl text-brand-500"></i>
+                <div class="option-icon">🍕</div>
                 <div>
-                  <h4 class="font-bold text-slate-800 dark:text-white">
-                    Salgado
-                  </h4>
-                  <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                    Pratos clássicos e refeições do dia a dia
-                  </p>
+                  <div class="option-name">Salgado</div>
+                  <div class="option-desc">Refeições salgadas clássicas</div>
                 </div>
               </button>
               <button
-                onclick="selectOption('sabor', 'Doce')"
-                class="option-btn p-5 rounded-2xl border-2 border-slate-200 dark:border-slate-700 hover:border-brand-500 dark:hover:border-brand-500 hover:bg-brand-50/50 dark:hover:bg-slate-700/50 text-left transition duration-200 flex flex-col justify-between h-36"
+                class="option-btn"
+                onclick="setWizardOption('sabor', 'Doce')"
               >
-                <i class="fa-solid fa-ice-cream text-3xl text-pink-500"></i>
+                <div class="option-icon">🍰</div>
                 <div>
-                  <h4 class="font-bold text-slate-800 dark:text-white">Doce</h4>
-                  <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                    Sobremesas, guloseimas e delícias
-                  </p>
+                  <div class="option-name">Doce</div>
+                  <div class="option-desc">Sobremesas e doces</div>
                 </div>
               </button>
               <button
-                onclick="selectOption('sabor', 'Esquisito')"
-                class="option-btn p-5 rounded-2xl border-2 border-slate-200 dark:border-slate-700 hover:border-brand-500 dark:hover:border-brand-500 hover:bg-brand-50/50 dark:hover:bg-slate-700/50 text-left transition duration-200 flex flex-col justify-between h-36"
+                class="option-btn"
+                onclick="setWizardOption('sabor', 'Esquisito')"
               >
-                <i class="fa-solid fa-flask text-3xl text-purple-500"></i>
+                <div class="option-icon">🧪</div>
                 <div>
-                  <h4 class="font-bold text-slate-800 dark:text-white">
-                    Esquisito
-                  </h4>
-                  <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                    Para paladares corajosos ou peculiares
-                  </p>
+                  <div class="option-name">Esquisito</div>
+                  <div class="option-desc">Escolhas não convencionais</div>
                 </div>
               </button>
             </div>
           </div>
 
           <!-- Step 2: Valor -->
-          <div id="wizard-step-2" class="wizard-step space-y-6 hidden">
-            <h3
-              class="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2"
-            >
-              <i class="fa-solid fa-wallet text-brand-600"></i> Quanto você
-              pretende gastar?
-            </h3>
-            <div
-              id="step-2-options"
-              class="grid grid-cols-1 sm:grid-cols-2 gap-4"
-            >
-              <!-- Dynamic options based on previous selection -->
+          <div id="step-2" class="wizard-step" style="display: none">
+            <div class="wizard-question-title">
+              2. Qual a faixa de preço desejada?
+            </div>
+            <div class="options-grid" id="valor-options-container">
+              <!-- Dynamic Options injected via JS -->
             </div>
           </div>
 
           <!-- Step 3: Temperatura -->
-          <div id="wizard-step-3" class="wizard-step space-y-6 hidden">
-            <h3
-              class="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2"
-            >
-              <i class="fa-solid fa-temperature-half text-brand-600"></i>
-              Prefere a refeição em que temperatura?
-            </h3>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div id="step-3" class="wizard-step" style="display: none">
+            <div class="wizard-question-title">3. Temperatura do prato?</div>
+            <div class="options-grid">
               <button
-                onclick="selectOption('temperatura', 'Quente')"
-                class="option-btn p-5 rounded-2xl border-2 border-slate-200 dark:border-slate-700 hover:border-brand-500 dark:hover:border-brand-500 hover:bg-brand-50/50 dark:hover:bg-slate-700/50 text-left transition duration-200 flex flex-col justify-between h-36"
+                class="option-btn"
+                onclick="setWizardOption('temp', 'Quente')"
               >
-                <i class="fa-solid fa-fire text-3xl text-orange-500"></i>
+                <div class="option-icon">🔥</div>
                 <div>
-                  <h4 class="font-bold text-slate-800 dark:text-white">
-                    Quente
-                  </h4>
-                  <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                    Saindo do forno ou da panela
-                  </p>
+                  <div class="option-name">Quente</div>
+                  <div class="option-desc">Servido quentinho</div>
                 </div>
               </button>
               <button
-                onclick="selectOption('temperatura', 'Frio')"
-                class="option-btn p-5 rounded-2xl border-2 border-slate-200 dark:border-slate-700 hover:border-brand-500 dark:hover:border-brand-500 hover:bg-brand-50/50 dark:hover:bg-slate-700/50 text-left transition duration-200 flex flex-col justify-between h-36"
+                class="option-btn"
+                onclick="setWizardOption('temp', 'Frio')"
               >
-                <i class="fa-solid fa-snowflake text-3xl text-sky-500"></i>
+                <div class="option-icon">❄️</div>
                 <div>
-                  <h4 class="font-bold text-slate-800 dark:text-white">Frio</h4>
-                  <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                    Geladinho ou em temperatura ambiente
-                  </p>
+                  <div class="option-name">Frio</div>
+                  <div class="option-desc">Gelado ou temperatura ambiente</div>
                 </div>
               </button>
             </div>
           </div>
 
-          <!-- Step 4: Tempo de Preparo -->
-          <div id="wizard-step-4" class="wizard-step space-y-6 hidden">
-            <h3
-              class="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2"
-            >
-              <i class="fa-solid fa-clock text-brand-600"></i> Qual a sua
-              pressa?
-            </h3>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- Step 4: Tempo -->
+          <div id="step-4" class="wizard-step" style="display: none">
+            <div class="wizard-question-title">
+              4. Quanto tempo pode esperar?
+            </div>
+            <div class="options-grid">
               <button
-                onclick="selectOption('tempo', 'Rápido')"
-                class="option-btn p-5 rounded-2xl border-2 border-slate-200 dark:border-slate-700 hover:border-brand-500 dark:hover:border-brand-500 hover:bg-brand-50/50 dark:hover:bg-slate-700/50 text-left transition duration-200 flex flex-col justify-between h-36"
+                class="option-btn"
+                onclick="setWizardOption('tempo', 'Rápido')"
               >
-                <i class="fa-solid fa-bolt text-3xl text-yellow-500"></i>
+                <div class="option-icon">⚡</div>
                 <div>
-                  <h4 class="font-bold text-slate-800 dark:text-white">
-                    Rápido
-                  </h4>
-                  <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                    Pronto em poucos minutos
-                  </p>
+                  <div class="option-name">Rápido</div>
+                  <div class="option-desc">Preparo em poucos minutos</div>
                 </div>
               </button>
               <button
-                onclick="selectOption('tempo', 'Demorado')"
-                class="option-btn p-5 rounded-2xl border-2 border-slate-200 dark:border-slate-700 hover:border-brand-500 dark:hover:border-brand-500 hover:bg-brand-50/50 dark:hover:bg-slate-700/50 text-left transition duration-200 flex flex-col justify-between h-36"
+                class="option-btn"
+                onclick="setWizardOption('tempo', 'Demorado')"
               >
-                <i
-                  class="fa-solid fa-hourglass-half text-3xl text-indigo-500"
-                ></i>
+                <div class="option-icon">⏳</div>
                 <div>
-                  <h4 class="font-bold text-slate-800 dark:text-white">
-                    Demorado
-                  </h4>
-                  <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                    Vale a pena esperar o preparo especial
-                  </p>
+                  <div class="option-name">Demorado</div>
+                  <div class="option-desc">Preparo mais elaborado</div>
                 </div>
               </button>
             </div>
           </div>
 
-          <!-- Controls & Navigation -->
-          <div
-            class="flex items-center justify-between pt-6 border-t border-slate-100 dark:border-slate-700 mt-6"
-          >
+          <!-- Footer / Controls -->
+          <div class="wizard-footer">
             <button
-              id="wizard-back-btn"
-              onclick="prevStep()"
-              class="px-4 py-2 text-sm font-semibold text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 transition hidden"
+              id="wizard-prev-btn"
+              class="btn btn-ghost"
+              onclick="prevWizardStep()"
+              style="visibility: hidden"
             >
-              <i class="fa-solid fa-arrow-left mr-1"></i> Voltar
+              ← Voltar
             </button>
-            <button
-              onclick="resetWizard()"
-              class="px-4 py-2 text-sm font-semibold text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition ml-auto"
-            >
-              <i class="fa-solid fa-rotate-right mr-1"></i> Reiniciar
+            <button class="btn btn-ghost" onclick="resetWizard()">
+              Reiniciar ↻
             </button>
           </div>
         </div>
 
-        <!-- RESULT CARD DISPLAY -->
-        <div id="wizard-result" class="hidden">
-          <!-- Injected via JavaScript -->
+        <!-- Recommendation Result Card -->
+        <div
+          id="wizard-result-container"
+          style="display: none; max-width: 720px; margin: 1.5rem auto 0 auto"
+        >
+          <!-- Result dynamically rendered here -->
         </div>
       </section>
 
-      <!-- VIEW 2: CARDÁPIO COMPLETO E FILTROS -->
-      <section id="view-menu" class="hidden space-y-6">
-        <div
-          class="flex flex-col md:flex-row md:items-center justify-between gap-4"
-        >
-          <div>
-            <h2 class="text-2xl font-bold text-slate-900 dark:text-white">
-              Cardápio Geral
-            </h2>
-            <p class="text-sm text-slate-500 dark:text-slate-400">
-              Explore todos os 17 pratos catalogados na matriz IHC
-            </p>
-          </div>
+      <!-- VIEW 2: CARDÁPIO COMPLETO -->
+      <section id="view-menu" class="view-section">
+        <div class="section-header">
+          <h2 class="section-title">Nosso Cardápio</h2>
+          <p class="section-desc">
+            Explore todos os 17 itens disponíveis em nossa matriz de decisão.
+          </p>
+        </div>
 
-          <!-- Interactive Filter Controls -->
-          <div class="flex flex-wrap gap-2">
+        <!-- Toolbar & Filters -->
+        <div class="menu-toolbar">
+          <div class="search-input-wrapper">
+            <svg class="svg-icon search-icon" viewBox="0 0 24 24">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+              />
+            </svg>
             <input
               type="text"
               id="menu-search"
+              class="search-input"
+              placeholder="Buscar prato por nome..."
               oninput="filterMenu()"
-              placeholder="Buscar prato..."
-              class="px-4 py-2 rounded-xl text-sm border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-500"
             />
+          </div>
+
+          <div style="display: flex; gap: 0.5rem">
             <select
               id="filter-sabor"
+              class="filter-select"
               onchange="filterMenu()"
-              class="px-3 py-2 rounded-xl text-sm border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300"
             >
-              <option value="">Todos Sabores</option>
+              <option value="">Todos os Sabores</option>
               <option value="Salgado">Salgado</option>
               <option value="Doce">Doce</option>
               <option value="Esquisito">Esquisito</option>
             </select>
+
             <select
               id="filter-valor"
+              class="filter-select"
               onchange="filterMenu()"
-              class="px-3 py-2 rounded-xl text-sm border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300"
             >
-              <option value="">Todos Valores</option>
+              <option value="">Todos os Preços</option>
               <option value="Barato">Barato</option>
               <option value="Caro">Caro</option>
               <option value="De graça">De graça</option>
@@ -419,64 +1227,38 @@
           </div>
         </div>
 
-        <!-- Menu Grid -->
-        <div
-          id="menu-grid"
-          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-        >
-          <!-- Dynamically generated via JavaScript -->
+        <!-- Food Items Grid -->
+        <div id="menu-grid" class="menu-grid">
+          <!-- Dynamically populated via JS -->
         </div>
       </section>
 
-      <!-- VIEW 3: MATRIZ DE DECISÃO TABULAR (IHC) -->
-      <section id="view-table" class="hidden space-y-6">
-        <div
-          class="flex flex-col sm:flex-row sm:items-center justify-between gap-4"
-        >
-          <div>
-            <h2 class="text-2xl font-bold text-slate-900 dark:text-white">
-              Tabela de Decisão IHC
-            </h2>
-            <p class="text-sm text-slate-500 dark:text-slate-400">
-              A matriz exata utilizada em aula para derivar a experiência do
-              usuário
-            </p>
-          </div>
-          <div
-            class="text-xs text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700"
-          >
-            Total:
-            <span id="table-count" class="font-bold text-brand-600">17</span>
-            regras cadastradas
-          </div>
+      <!-- VIEW 3: MATRIZ IHC (TABELA ORIGINAL) -->
+      <section id="view-table" class="view-section">
+        <div class="section-header">
+          <h2 class="section-title">Matriz de Decisão IHC</h2>
+          <p class="section-desc">
+            Representação fiel em tabela estruturada da aula de Interação
+            Humano-Computador.
+          </p>
         </div>
 
-        <div
-          class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden"
-        >
-          <div class="overflow-x-auto">
-            <table
-              class="w-full text-left text-sm text-slate-600 dark:text-slate-300"
-            >
-              <thead
-                class="bg-slate-50 dark:bg-slate-700/50 text-slate-700 dark:text-slate-200 font-bold uppercase text-xs tracking-wider border-b border-slate-200 dark:border-slate-700"
-              >
+        <div class="table-wrapper">
+          <div class="table-responsive">
+            <table class="ihc-table">
+              <thead>
                 <tr>
-                  <th class="py-3.5 px-4">Sabor</th>
-                  <th class="py-3.5 px-4">Valor</th>
-                  <th class="py-3.5 px-4">Temperatura</th>
-                  <th class="py-3.5 px-4">Tempo de Preparo</th>
-                  <th class="py-3.5 px-4 text-brand-600 dark:text-brand-400">
-                    Comida Recomendada
-                  </th>
-                  <th class="py-3.5 px-4 text-right">Ação</th>
+                  <th>#</th>
+                  <th>Sabor</th>
+                  <th>Valor</th>
+                  <th>Temperatura</th>
+                  <th>Tempo de preparo</th>
+                  <th>Comida recomendada</th>
+                  <th>Ação</th>
                 </tr>
               </thead>
-              <tbody
-                id="ihc-table-body"
-                class="divide-y divide-slate-100 dark:divide-slate-700"
-              >
-                <!-- Injected via JavaScript -->
+              <tbody id="ihc-table-body">
+                <!-- Dynamically populated via JS -->
               </tbody>
             </table>
           </div>
@@ -484,50 +1266,33 @@
       </section>
     </main>
 
-    <!-- SHOPPING CART MODAL -->
+    <!-- SHOPPING CART SLIDE-OVER DRAWER -->
     <div
-      id="cart-modal"
-      class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex justify-end hidden transition-opacity"
+      id="cart-overlay"
+      class="cart-overlay"
+      onclick="handleOverlayClick(event)"
     >
-      <div
-        class="bg-white dark:bg-slate-900 w-full max-w-md h-full shadow-2xl flex flex-col p-6 border-l border-slate-200 dark:border-slate-800"
-      >
-        <div
-          class="flex justify-between items-center pb-4 border-b border-slate-100 dark:border-slate-800"
-        >
-          <h3
-            class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2"
-          >
-            <i class="fa-solid fa-bag-shopping text-brand-600"></i> Seu Pedido
-          </h3>
-          <button
-            onclick="toggleCartModal()"
-            class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-2"
-          >
-            <i class="fa-solid fa-xmark text-xl"></i>
-          </button>
+      <div class="cart-drawer">
+        <div class="cart-header">
+          <div class="cart-title">Sua Sacola</div>
+          <button class="btn-icon" onclick="toggleCart()">✕</button>
         </div>
 
-        <!-- Cart Items Container -->
-        <div id="cart-items" class="flex-grow overflow-y-auto py-4 space-y-4">
-          <!-- Cart items or empty state -->
+        <div id="cart-body" class="cart-body">
+          <!-- Cart items rendered via JS -->
         </div>
 
-        <!-- Cart Footer -->
-        <div
-          class="pt-4 border-t border-slate-100 dark:border-slate-800 space-y-4"
-        >
-          <div
-            class="flex justify-between font-bold text-slate-900 dark:text-white text-lg"
-          >
-            <span>Total Estimado:</span>
-            <span id="cart-total" class="text-brand-600 dark:text-brand-400"
+        <div class="cart-footer">
+          <div class="cart-total-row">
+            <span>Total:</span>
+            <span id="cart-total-price" style="color: var(--brand-primary)"
               >R$ 0,00</span
             >
           </div>
           <button
+            class="btn btn-primary"
+            style="width: 100%; justify-content: center"
             onclick="checkout()"
-            class="w-full py-3.5 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-lg transition active:scale-98"
           >
             Finalizar Pedido
           </button>
@@ -535,21 +1300,15 @@
       </div>
     </div>
 
-    <!-- NOTIFICATION TOAST -->
-    <div
-      id="toast"
-      class="fixed bottom-6 right-6 z-50 bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 transition-all duration-300 translate-y-20 opacity-0 pointer-events-none"
-    >
-      <i id="toast-icon" class="fa-solid fa-circle-check text-green-400"></i>
-      <span id="toast-message" class="text-sm font-medium"
-        >Item adicionado com sucesso!</span
-      >
-    </div>
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="toast">Notificação aqui</div>
 
-    <!-- JAVASCRIPT LOGIC & DATABASE -->
+    <!-- NATIVE JAVASCRIPT LOGIC -->
     <script>
-      // Data derived directly from the IHC Decision Matrix provided in the screenshot
-      const ihcMatrix = [
+      /* ==========================================================================
+           1. DATABASE: 17 ITEMS FROM IHC DECISION MATRIX
+           ========================================================================== */
+      const ihcData = [
         {
           id: 1,
           sabor: "Salgado",
@@ -558,9 +1317,8 @@
           tempo: "Rápido",
           prato: "Marmita",
           preco: 18.0,
-          desc: "Refeição caseira clássica, farta e quentinha em poucos minutos.",
-          icon: "fa-box",
-          tag: "Prático",
+          emoji: "🍱",
+          desc: "Refeição rápida, farta e completa.",
         },
         {
           id: 2,
@@ -570,9 +1328,8 @@
           tempo: "Rápido",
           prato: "Sanduíche de frango",
           preco: 12.5,
-          desc: "Sanduíche leve e geladinho, recheado com maionese especial e frango desfiado.",
-          icon: "fa-bread-slice",
-          tag: "Lanche",
+          emoji: "🥪",
+          desc: "Sanduíche levinho e prático.",
         },
         {
           id: 3,
@@ -582,9 +1339,7 @@
           tempo: "Demorado",
           prato: "Macarronada",
           preco: 22.0,
-          desc: "Massa artesanal cozida lentamente ao molho de tomate fresco e queijo.",
-          icon: "fa-bowl-rice",
-          tag: "Comfort Food",
+          desc: "Massa com bastante molho vermelho.",
         },
         {
           id: 4,
@@ -594,9 +1349,7 @@
           tempo: "Demorado",
           prato: "Salpicão",
           preco: 15.0,
-          desc: "Mistura crocante e refrigerada de legumes, frango e batata palha.",
-          icon: "fa-leaf",
-          tag: "Refrescante",
+          desc: "Salada de frango com batata palha.",
         },
         {
           id: 5,
@@ -606,9 +1359,7 @@
           tempo: "Rápido",
           prato: "Pizza",
           preco: 55.0,
-          desc: "Fatia napolitana gourmet assada em forno a lenha de alta temperatura.",
-          icon: "fa-pizza-slice",
-          tag: "Gourmet",
+          desc: "Fatia quentinha de alta qualidade.",
         },
         {
           id: 6,
@@ -618,9 +1369,7 @@
           tempo: "Rápido",
           prato: "Sushi",
           preco: 68.0,
-          desc: "Combinado individual fresco de salmão e hossomakis montados na hora.",
-          icon: "fa-fish",
-          tag: "Japonês",
+          desc: "Combinado individual super fresco.",
         },
         {
           id: 7,
@@ -630,9 +1379,7 @@
           tempo: "Demorado",
           prato: "Lasanha",
           preco: 42.0,
-          desc: "Camadas generosas de massa, bolonhesa rica e queijo gratinado.",
-          icon: "fa-layer-group",
-          tag: "Especial",
+          desc: "Camadas de queijo e bolonhesa rica.",
         },
         {
           id: 8,
@@ -642,9 +1389,7 @@
           tempo: "Demorado",
           prato: "Torta salgada",
           preco: 35.0,
-          desc: "Torta artesanal fria de frango com cream cheese e massa folhada.",
-          icon: "fa-pie-chart",
-          tag: "Artesanal",
+          desc: "Torta gelada recheada e cremosa.",
         },
         {
           id: 9,
@@ -654,9 +1399,7 @@
           tempo: "Rápido",
           prato: "Churros",
           preco: 8.0,
-          desc: "Crocantes por fora, macios por dentro, recheados de doce de leite aquecido.",
-          icon: "fa-scroll",
-          tag: "Sobremesa",
+          desc: "Crocante com doce de leite morno.",
         },
         {
           id: 10,
@@ -666,9 +1409,7 @@
           tempo: "Rápido",
           prato: "Açaí artesanal",
           preco: 14.0,
-          desc: "Creme puro de açaí gelado servido com banana e granola crocante.",
-          icon: "fa-wine-glass-stripe",
-          tag: "Energético",
+          desc: "Creme de açaí com frutas frescas.",
         },
         {
           id: 11,
@@ -678,9 +1419,7 @@
           tempo: "Demorado",
           prato: "Arroz-doce",
           preco: 9.5,
-          desc: "Cozido suavemente no leite de coco com bastante canela polvilhada.",
-          icon: "fa-spoon",
-          tag: "Tradicional",
+          desc: "Tradicional arroz-doce com canela.",
         },
         {
           id: 12,
@@ -690,9 +1429,7 @@
           tempo: "Demorado",
           prato: "Pudim",
           preco: 10.0,
-          desc: "Pudim de leite condensado super liso com calda de caramelo brilhante.",
-          icon: "fa-circle-dot",
-          tag: "Favorito",
+          desc: "Clássico pudim de leite condensado.",
         },
         {
           id: 13,
@@ -702,9 +1439,7 @@
           tempo: "Rápido",
           prato: "Petit gâteau",
           preco: 28.0,
-          desc: "Bolo quente de chocolate belga com recheio cremoso e sorvete de baunilha.",
-          icon: "fa-cookie",
-          tag: "Premium",
+          desc: "Bolo quente com sorvete de baunilha.",
         },
         {
           id: 14,
@@ -714,9 +1449,7 @@
           tempo: "Rápido",
           prato: "Milkshake",
           preco: 24.0,
-          desc: "Batido denso de sorvete de morango fresco com bastante chantilly.",
-          icon: "fa-glass-water",
-          tag: "Bebida",
+          desc: "Milkshake cremoso de morango.",
         },
         {
           id: 15,
@@ -726,9 +1459,7 @@
           tempo: "Demorado",
           prato: "Torta de morango",
           preco: 32.0,
-          desc: "Torta de morango assada com creme confeiteiro aquecido.",
-          icon: "fa-stroopwafel",
-          tag: "Sofisticado",
+          desc: "Torta fina com recheio quentinho.",
         },
         {
           id: 16,
@@ -738,9 +1469,7 @@
           tempo: "Demorado",
           prato: "Bolo",
           preco: 26.0,
-          desc: "Fatia alta de bolo gelado de chocolate recheado com brigadeiro.",
-          icon: "fa-cake-candles",
-          tag: "Festa",
+          desc: "Fatia artesanal de bolo de chocolate.",
         },
         {
           id: 17,
@@ -750,266 +1479,240 @@
           tempo: "Rápido",
           prato: "MINGUAU COM SAL",
           preco: 0.0,
-          desc: "A controversa iguaria experimental da aula de IHC! Servido bem quente e salgado.",
-          icon: "fa-flask-vial",
-          tag: "Meme IHC",
+          emoji: "🥣",
+          desc: "A exótica e icônica iguaria da aula de IHC!",
         },
       ];
 
-      // State Management
-      let currentStep = 1;
+      /* ==========================================================================
+           2. STATE MANAGEMENT
+           ========================================================================== */
+      let currentTab = "wizard";
+      let wizardCurrentStep = 1;
       let wizardSelections = {
         sabor: null,
         valor: null,
-        temperatura: null,
+        temp: null,
         tempo: null,
       };
       let cart = [];
 
-      // UI View Switcher
-      function switchView(viewName) {
-        document.getElementById("view-wizard").classList.add("hidden");
-        document.getElementById("view-menu").classList.add("hidden");
-        document.getElementById("view-table").classList.add("hidden");
+      /* ==========================================================================
+           3. TAB SWITCHER
+           ========================================================================== */
+      function switchTab(tabName) {
+        currentTab = tabName;
 
-        document.querySelectorAll("nav button").forEach((btn) => {
-          btn.classList.remove(
-            "bg-white",
-            "dark:bg-slate-700",
-            "text-brand-600",
-            "shadow-sm",
-          );
-          btn.classList.add("text-slate-600", "dark:text-slate-300");
-        });
+        // Hide all sections
+        document
+          .querySelectorAll(".view-section")
+          .forEach((el) => el.classList.remove("active"));
+        document
+          .querySelectorAll(".nav-tab-btn")
+          .forEach((el) => el.classList.remove("active"));
 
-        const activeBtn = document.getElementById(`nav-${viewName}`);
-        if (activeBtn) {
-          activeBtn.classList.add(
-            "bg-white",
-            "dark:bg-slate-700",
-            "text-brand-600",
-            "shadow-sm",
-          );
-        }
+        // Show selected
+        document.getElementById(`view-${tabName}`).classList.add("active");
+        document.getElementById(`tab-btn-${tabName}`).classList.add("active");
 
-        if (viewName === "wizard")
-          document.getElementById("view-wizard").classList.remove("hidden");
-        if (viewName === "menu") {
-          document.getElementById("view-menu").classList.remove("hidden");
-          renderMenuCards(ihcMatrix);
-        }
-        if (viewName === "table") {
-          document.getElementById("view-table").classList.remove("hidden");
-          renderIHCTable();
-        }
+        if (tabName === "menu") renderMenu();
+        if (tabName === "table") renderTable();
       }
 
-      // Dark Mode Logic
-      function toggleDarkMode() {
-        const isDark = document.documentElement.classList.toggle("dark");
-        const icon = document.getElementById("theme-icon");
-        if (isDark) {
-          icon.className = "fa-solid fa-sun text-amber-400";
-        } else {
-          icon.className = "fa-solid fa-moon text-slate-500";
-        }
+      /* ==========================================================================
+           4. THEME TOGGLE (LIGHT / DARK)
+           ========================================================================== */
+      function toggleTheme() {
+        const html = document.documentElement;
+        const currentTheme = html.getAttribute("data-theme");
+        const newTheme = currentTheme === "light" ? "dark" : "light";
+
+        html.setAttribute("data-theme", newTheme);
+
+        document.getElementById("theme-icon-sun").style.display =
+          newTheme === "dark" ? "inline-block" : "none";
+        document.getElementById("theme-icon-moon").style.display =
+          newTheme === "light" ? "inline-block" : "none";
       }
 
-      // Wizard Logic
-      function selectOption(category, value) {
+      /* ==========================================================================
+           5. WIZARD / RECOMMENDATION SYSTEM
+           ========================================================================== */
+      function setWizardOption(category, value) {
         wizardSelections[category] = value;
 
-        if (currentStep === 1) {
-          // Populate step 2 options based on Sabor selection
-          const step2Container = document.getElementById("step-2-options");
-          step2Container.innerHTML = "";
+        if (wizardCurrentStep === 1) {
+          // Populate options for Step 2 based on Step 1
+          const valorContainer = document.getElementById(
+            "valor-options-container",
+          );
+          valorContainer.innerHTML = "";
 
-          let allowedValues = [];
-          if (value === "Esquisito") {
-            allowedValues = ["De graça"];
-          } else {
-            allowedValues = ["Barato", "Caro"];
-          }
+          let allowedValor =
+            value === "Esquisito" ? ["De graça"] : ["Barato", "Caro"];
 
-          allowedValues.forEach((val) => {
+          allowedValor.forEach((val) => {
             const btn = document.createElement("button");
-            btn.className =
-              "option-btn p-5 rounded-2xl border-2 border-slate-200 dark:border-slate-700 hover:border-brand-500 hover:bg-brand-50/50 dark:hover:bg-slate-700/50 text-left transition duration-200 flex flex-col justify-between h-36";
-            btn.onclick = () => selectOption("valor", val);
+            btn.className = "option-btn";
+            btn.onclick = () => setWizardOption("valor", val);
             btn.innerHTML = `
-                        <i class="fa-solid ${val === "Barato" ? "fa-coins text-emerald-500" : val === "Caro" ? "fa-gem text-indigo-500" : "fa-gift text-pink-500"} text-3xl"></i>
+                        <div class="option-icon">${val === "Barato" ? "🪙" : val === "Caro" ? "💎" : "🎁"}</div>
                         <div>
-                            <h4 class="font-bold text-slate-800 dark:text-white">${val}</h4>
-                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">${val === "De graça" ? "Cortesia da casa" : "Faixa de preço estimada"}</p>
+                            <div class="option-name">${val}</div>
+                            <div class="option-desc">${val === "De graça" ? "Opção cortesias" : "Faixa de valor estimada"}</div>
                         </div>
                     `;
-            step2Container.appendChild(btn);
+            valorContainer.appendChild(btn);
           });
         }
 
-        if (currentStep < 4) {
-          currentStep++;
-          updateWizardUI();
+        if (wizardCurrentStep < 4) {
+          wizardCurrentStep++;
+          updateWizardView();
         } else {
-          // Show Result
-          calculateResult();
+          calculateWizardResult();
         }
       }
 
-      function prevStep() {
-        if (currentStep > 1) {
-          currentStep--;
-          updateWizardUI();
+      function prevWizardStep() {
+        if (wizardCurrentStep > 1) {
+          wizardCurrentStep--;
+          updateWizardView();
         }
       }
 
       function resetWizard() {
-        currentStep = 1;
+        wizardCurrentStep = 1;
         wizardSelections = {
           sabor: null,
           valor: null,
-          temperatura: null,
+          temp: null,
           tempo: null,
         };
-        document.getElementById("wizard-result").classList.add("hidden");
-        updateWizardUI();
+        document.getElementById("wizard-result-container").style.display =
+          "none";
+        updateWizardView();
       }
 
-      function updateWizardUI() {
-        // Hide all steps
+      function updateWizardView() {
         for (let i = 1; i <= 4; i++) {
-          document.getElementById(`wizard-step-${i}`).classList.add("hidden");
+          document.getElementById(`step-${i}`).style.display = "none";
         }
-        // Show current
-        document
-          .getElementById(`wizard-step-${currentStep}`)
-          .classList.remove("hidden");
 
-        // Update Progress Bar & Labels
-        const stepTitles = [
-          "Sabor",
-          "Valor",
-          "Temperatura",
-          "Tempo de Preparo",
-        ];
-        document.getElementById("step-label").innerText =
-          `Passo ${currentStep} de 4`;
-        document.getElementById("step-title").innerText =
-          stepTitles[currentStep - 1];
-        document.getElementById("step-bar").style.width =
-          `${(currentStep / 4) * 100}%`;
+        document.getElementById(`step-${wizardCurrentStep}`).style.display =
+          "block";
 
-        // Back button visibility
-        const backBtn = document.getElementById("wizard-back-btn");
-        if (currentStep > 1) {
-          backBtn.classList.remove("hidden");
-        } else {
-          backBtn.classList.add("hidden");
-        }
+        // UI Labels & Progress
+        const labels = ["Sabor", "Valor", "Temperatura", "Tempo de preparo"];
+        document.getElementById("wizard-step-indicator").innerText =
+          `Passo ${wizardCurrentStep} de 4`;
+        document.getElementById("wizard-step-label").innerText =
+          labels[wizardCurrentStep - 1];
+        document.getElementById("wizard-progress-bar").style.width =
+          `${(wizardCurrentStep / 4) * 100}%`;
+
+        // Back button
+        const prevBtn = document.getElementById("wizard-prev-btn");
+        prevBtn.style.visibility = wizardCurrentStep > 1 ? "visible" : "hidden";
       }
 
-      function calculateResult() {
-        const match = ihcMatrix.find(
+      function calculateWizardResult() {
+        const match = ihcData.find(
           (item) =>
             item.sabor === wizardSelections.sabor &&
             item.valor === wizardSelections.valor &&
-            item.temp === wizardSelections.temperatura &&
+            item.temp === wizardSelections.temp &&
             item.tempo === wizardSelections.tempo,
         );
 
-        const resultContainer = document.getElementById("wizard-result");
-        resultContainer.classList.remove("hidden");
+        const container = document.getElementById("wizard-result-container");
+        container.style.display = "block";
 
         if (match) {
-          resultContainer.innerHTML = `
-                    <div class="bg-gradient-to-br from-brand-500 to-amber-600 rounded-3xl p-1 text-white shadow-2xl animate-fade-in">
-                        <div class="bg-white dark:bg-slate-800 rounded-[22px] p-6 sm:p-8 text-slate-800 dark:text-slate-100">
-                            <div class="flex items-center justify-between">
-                                <span class="px-3 py-1 bg-brand-100 text-brand-700 dark:bg-brand-900/50 dark:text-brand-300 rounded-full text-xs font-bold uppercase tracking-wider">
-                                    Combinação Perfeita Encontrada!
-                                </span>
-                                <span class="text-2xl font-black text-brand-600 dark:text-brand-400">
-                                    ${match.preco === 0 ? "GRÁTIS" : `R$ ${match.preco.toFixed(2)}`}
-                                </span>
-                            </div>
+          const isMeme = match.prato === "MINGUAU COM SAL";
 
-                            <div class="mt-6 flex flex-col md:flex-row items-center gap-6">
-                                <div class="w-24 h-24 rounded-2xl bg-brand-50 dark:bg-slate-700 flex items-center justify-center text-brand-600 dark:text-brand-400 text-5xl flex-shrink-0">
-                                    <i class="fa-solid ${match.icon}"></i>
-                                </div>
-                                <div class="space-y-2 text-center md:text-left flex-grow">
-                                    <h3 class="text-2xl font-extrabold text-slate-900 dark:text-white">${match.prato}</h3>
-                                    <p class="text-sm text-slate-500 dark:text-slate-400">${match.desc}</p>
-                                    <div class="flex flex-wrap justify-center md:justify-start gap-2 pt-2">
-                                        <span class="text-xs bg-slate-100 dark:bg-slate-700 px-2.5 py-1 rounded-md font-medium"><i class="fa-solid fa-utensils text-slate-400 mr-1"></i>${match.sabor}</span>
-                                        <span class="text-xs bg-slate-100 dark:bg-slate-700 px-2.5 py-1 rounded-md font-medium"><i class="fa-solid fa-tag text-slate-400 mr-1"></i>${match.valor}</span>
-                                        <span class="text-xs bg-slate-100 dark:bg-slate-700 px-2.5 py-1 rounded-md font-medium"><i class="fa-solid fa-temperature-half text-slate-400 mr-1"></i>${match.temp}</span>
-                                        <span class="text-xs bg-slate-100 dark:bg-slate-700 px-2.5 py-1 rounded-md font-medium"><i class="fa-solid fa-clock text-slate-400 mr-1"></i>${match.tempo}</span>
+          container.innerHTML = `
+                    <div class="result-box">
+                        <div class="result-inner">
+                            <span class="result-header-badge">Recomendação Encontrada</span>
+                            <div class="result-content">
+                                <div class="result-icon-wrapper">${match.emoji}</div>
+                                <div class="result-details">
+                                    <div class="result-title">${match.prato}</div>
+                                    <div class="result-price">${match.preco === 0 ? "GRÁTIS" : `R$ ${match.preco.toFixed(2)}`}</div>
+                                    <p style="font-size: 0.85rem; color: var(--text-secondary);">${match.desc}</p>
+                                    
+                                    <div class="result-tags">
+                                        <span class="tag">👅 ${match.sabor}</span>
+                                        <span class="tag">🏷️ ${match.valor}</span>
+                                        <span class="tag">🌡️ ${match.temp}</span>
+                                        <span class="tag">⏱️ ${match.tempo}</span>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="mt-8 pt-6 border-t border-slate-100 dark:border-slate-700 flex flex-col sm:flex-row gap-3">
-                                <button onclick="addToCart(${match.id})" class="flex-1 py-3.5 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-lg transition flex items-center justify-center gap-2">
-                                    <i class="fa-solid fa-plus"></i> Adicionar ao Pedido
+                            ${
+                              isMeme
+                                ? `
+                                <div class="meme-alert">
+                                    ⚠️ <strong>SISTEMA IHC:</strong> Combinação lendária identificada! O famoso Minguau com Sal da aula de IHC. Serve tanto para alimentar quanto para testar seus limites de paladar!
+                                </div>
+                            `
+                                : ""
+                            }
+
+                            <div style="display:flex; gap:0.75rem; margin-top:1.5rem;">
+                                <button class="btn btn-primary" style="flex:1; justify-center;" onclick="addToCart(${match.id})">
+                                    + Adicionar ao Pedido
                                 </button>
-                                <button onclick="resetWizard()" class="py-3.5 px-6 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 font-semibold rounded-xl transition">
-                                    Refazer Escolha
+                                <button class="btn btn-ghost" onclick="resetWizard()">
+                                    Tentar Outro
                                 </button>
                             </div>
                         </div>
                     </div>
                 `;
         } else {
-          resultContainer.innerHTML = `
-                    <div class="bg-amber-50 dark:bg-slate-800 border border-amber-200 dark:border-amber-900/50 rounded-2xl p-6 text-center space-y-3">
-                        <i class="fa-solid fa-circle-question text-amber-500 text-4xl"></i>
-                        <h3 class="font-bold text-slate-800 dark:text-white">Combinação não mapeada</h3>
-                        <p class="text-xs text-slate-500">Essa combinação específica de critérios não possui correspondente na matriz de IHC.</p>
-                        <button onclick="resetWizard()" class="px-4 py-2 bg-slate-800 text-white rounded-xl text-sm font-semibold">Tentar Novamente</button>
+          container.innerHTML = `
+                    <div style="background-color: var(--bg-card); border:1px solid var(--border-color); padding: 1.5rem; border-radius: var(--radius-lg); text-align:center;">
+                        <h3>Nenhum resultado correspondente</h3>
+                        <p style="font-size:0.85rem; color:var(--text-secondary); margin-top:0.5rem;">A combinação selecionada não possui registro na matriz.</p>
+                        <button class="btn btn-primary" style="margin-top:1rem;" onclick="resetWizard()">Reiniciar Quiz</button>
                     </div>
                 `;
         }
-        // Scroll to result smoothly
-        resultContainer.scrollIntoView({ behavior: "smooth" });
+
+        container.scrollIntoView({ behavior: "smooth" });
       }
 
-      // Render Cards in Menu
-      function renderMenuCards(items) {
+      /* ==========================================================================
+           6. MENU CARD DISPLAY & FILTERS
+           ========================================================================== */
+      function renderMenu(items = ihcData) {
         const grid = document.getElementById("menu-grid");
         grid.innerHTML = "";
 
         items.forEach((item) => {
           const card = document.createElement("div");
-          card.className =
-            "bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 shadow-sm hover:shadow-md transition card-glow flex flex-col justify-between";
+          card.className = "food-card";
           card.innerHTML = `
                     <div>
-                        <div class="flex items-start justify-between">
-                            <div class="w-12 h-12 rounded-xl bg-brand-50 dark:bg-slate-700 text-brand-600 dark:text-brand-400 flex items-center justify-center text-2xl">
-                                <i class="fa-solid ${item.icon}"></i>
-                            </div>
-                            <span class="px-2.5 py-1 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-lg text-xs font-semibold">
-                                ${item.tag}
-                            </span>
+                        <div class="food-card-header">
+                            <div class="food-emoji">${item.emoji}</div>
+                            <span class="tag">${item.sabor}</span>
                         </div>
-                        <h3 class="font-bold text-slate-900 dark:text-white text-lg mt-4">${item.prato}</h3>
-                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">${item.desc}</p>
-                        
-                        <div class="flex flex-wrap gap-1 mt-3">
-                            <span class="text-[10px] bg-slate-50 dark:bg-slate-900 px-2 py-0.5 rounded border border-slate-100 dark:border-slate-700 text-slate-500">${item.sabor}</span>
-                            <span class="text-[10px] bg-slate-50 dark:bg-slate-900 px-2 py-0.5 rounded border border-slate-100 dark:border-slate-700 text-slate-500">${item.valor}</span>
-                            <span class="text-[10px] bg-slate-50 dark:bg-slate-900 px-2 py-0.5 rounded border border-slate-100 dark:border-slate-700 text-slate-500">${item.temp}</span>
-                            <span class="text-[10px] bg-slate-50 dark:bg-slate-900 px-2 py-0.5 rounded border border-slate-100 dark:border-slate-700 text-slate-500">${item.tempo}</span>
+                        <div class="food-name">${item.prato}</div>
+                        <div class="food-desc">${item.desc}</div>
+                        <div style="display:flex; gap:0.25rem; flex-wrap:wrap; margin-bottom: 0.75rem;">
+                            <span class="tag" style="font-size:0.7rem">${item.valor}</span>
+                            <span class="tag" style="font-size:0.7rem">${item.temp}</span>
+                            <span class="tag" style="font-size:0.7rem">${item.tempo}</span>
                         </div>
                     </div>
-
-                    <div class="flex items-center justify-between mt-5 pt-4 border-t border-slate-100 dark:border-slate-700">
-                        <span class="font-extrabold text-slate-900 dark:text-white text-base">
-                            ${item.preco === 0 ? "GRÁTIS" : `R$ ${item.preco.toFixed(2)}`}
-                        </span>
-                        <button onclick="addToCart(${item.id})" class="p-2.5 bg-brand-600 hover:bg-brand-700 text-white rounded-xl transition">
-                            <i class="fa-solid fa-cart-plus"></i>
+                    <div class="food-card-footer">
+                        <div class="food-price">${item.preco === 0 ? "GRÁTIS" : `R$ ${item.preco.toFixed(2)}`}</div>
+                        <button class="btn btn-primary" style="padding:0.4rem 0.75rem; font-size:0.8rem;" onclick="addToCart(${item.id})">
+                            + Pedir
                         </button>
                     </div>
                 `;
@@ -1017,7 +1720,6 @@
         });
       }
 
-      // Filter Menu
       function filterMenu() {
         const search = document
           .getElementById("menu-search")
@@ -1025,41 +1727,40 @@
         const sabor = document.getElementById("filter-sabor").value;
         const valor = document.getElementById("filter-valor").value;
 
-        const filtered = ihcMatrix.filter((item) => {
-          const matchesSearch =
-            item.prato.toLowerCase().includes(search) ||
-            item.desc.toLowerCase().includes(search);
+        const filtered = ihcData.filter((item) => {
+          const matchesSearch = item.prato.toLowerCase().includes(search);
           const matchesSabor = !sabor || item.sabor === sabor;
           const matchesValor = !valor || item.valor === valor;
           return matchesSearch && matchesSabor && matchesValor;
         });
 
-        renderMenuCards(filtered);
+        renderMenu(filtered);
       }
 
-      // Render IHC Table
-      function renderIHCTable() {
+      /* ==========================================================================
+           7. MATRIZ IHC TABLE DISPLAY
+           ========================================================================== */
+      function renderTable() {
         const tbody = document.getElementById("ihc-table-body");
         tbody.innerHTML = "";
 
-        ihcMatrix.forEach((row) => {
+        ihcData.forEach((row) => {
           const tr = document.createElement("tr");
-          tr.className =
-            "hover:bg-slate-50 dark:hover:bg-slate-700/30 transition";
+          if (row.prato === "MINGUAU COM SAL") tr.className = "row-meme";
+
           tr.innerHTML = `
-                    <td class="py-3 px-4 font-medium text-slate-800 dark:text-slate-200">${row.sabor}</td>
-                    <td class="py-3 px-4">${row.valor}</td>
-                    <td class="py-3 px-4">${row.temp}</td>
-                    <td class="py-3 px-4">${row.tempo}</td>
-                    <td class="py-3 px-4 font-bold text-slate-900 dark:text-white">
-                        <span class="inline-flex items-center gap-1.5">
-                            <i class="fa-solid ${row.icon} text-brand-500 text-xs"></i>
-                            ${row.prato}
-                        </span>
+                    <td>${row.id}</td>
+                    <td>${row.sabor}</td>
+                    <td>${row.valor}</td>
+                    <td>${row.temp}</td>
+                    <td>${row.tempo}</td>
+                    <td class="food-cell">
+                        <span>${row.emoji}</span>
+                        <span>${row.prato}</span>
                     </td>
-                    <td class="py-3 px-4 text-right">
-                        <button onclick="addToCart(${row.id})" class="text-xs bg-slate-100 hover:bg-brand-50 hover:text-brand-600 dark:bg-slate-700 dark:hover:bg-brand-900/40 dark:hover:text-brand-300 px-2.5 py-1.5 rounded-lg transition">
-                            + Pedir
+                    <td>
+                        <button class="btn btn-ghost" style="padding:0.25rem 0.5rem; font-size:0.75rem;" onclick="addToCart(${row.id})">
+                            + Adicionar
                         </button>
                     </td>
                 `;
@@ -1067,9 +1768,22 @@
         });
       }
 
-      // Shopping Cart Logic
+      /* ==========================================================================
+           8. CART MANAGEMENT
+           ========================================================================== */
+      function toggleCart() {
+        const overlay = document.getElementById("cart-overlay");
+        overlay.classList.toggle("open");
+      }
+
+      function handleOverlayClick(e) {
+        if (e.target.id === "cart-overlay") {
+          toggleCart();
+        }
+      }
+
       function addToCart(itemId) {
-        const item = ihcMatrix.find((i) => i.id === itemId);
+        const item = ihcData.find((i) => i.id === itemId);
         if (!item) return;
 
         const existing = cart.find((c) => c.id === itemId);
@@ -1079,109 +1793,92 @@
           cart.push({ ...item, qty: 1 });
         }
 
-        updateCartUI();
-        showToast(`"${item.prato}" foi adicionado!`);
+        updateCart();
+        showToast(`"${item.prato}" adicionado à sacola!`);
       }
 
-      function updateCartUI() {
-        const badge = document.getElementById("cart-badge");
-        const totalQty = cart.reduce((acc, curr) => acc + curr.qty, 0);
+      function changeQty(itemId, delta) {
+        const item = cart.find((c) => c.id === itemId);
+        if (!item) return;
+
+        item.qty += delta;
+        if (item.qty <= 0) {
+          cart = cart.filter((c) => c.id !== itemId);
+        }
+        updateCart();
+      }
+
+      function updateCart() {
+        const countBadge = document.getElementById("cart-badge");
+        const totalQty = cart.reduce((acc, i) => acc + i.qty, 0);
 
         if (totalQty > 0) {
-          badge.innerText = totalQty;
-          badge.classList.remove("hidden");
+          countBadge.innerText = totalQty;
+          countBadge.classList.remove("hidden");
         } else {
-          badge.classList.add("hidden");
+          countBadge.classList.add("hidden");
         }
 
-        // Render modal items
-        const container = document.getElementById("cart-items");
+        // Render drawer items
+        const body = document.getElementById("cart-body");
         if (cart.length === 0) {
-          container.innerHTML = `
-                    <div class="text-center py-12 text-slate-400 space-y-2">
-                        <i class="fa-solid fa-basket-shopping text-4xl"></i>
-                        <p class="text-sm">Sua sacola está vazia.</p>
-                    </div>
-                `;
+          body.innerHTML = `<div class="empty-cart-msg">Sua sacola está vazia.</div>`;
         } else {
-          container.innerHTML = "";
+          body.innerHTML = "";
           let total = 0;
 
           cart.forEach((item) => {
             total += item.preco * item.qty;
             const el = document.createElement("div");
-            el.className =
-              "flex items-center justify-between bg-slate-50 dark:bg-slate-800/60 p-3.5 rounded-xl border border-slate-100 dark:border-slate-800";
+            el.className = "cart-item";
             el.innerHTML = `
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-lg bg-white dark:bg-slate-700 flex items-center justify-center text-brand-600 dark:text-brand-400">
-                                <i class="fa-solid ${item.icon}"></i>
-                            </div>
+                        <div class="cart-item-info">
+                            <span style="font-size:1.5rem;">${item.emoji}</span>
                             <div>
-                                <h4 class="font-bold text-sm text-slate-900 dark:text-white">${item.prato}</h4>
-                                <span class="text-xs text-slate-500">${item.preco === 0 ? "Grátis" : `R$ ${item.preco.toFixed(2)}`}</span>
+                                <div class="cart-item-name">${item.prato}</div>
+                                <div class="cart-item-price">${item.preco === 0 ? "Grátis" : `R$ ${item.preco.toFixed(2)}`}</div>
                             </div>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <button onclick="changeCartQty(${item.id}, -1)" class="w-7 h-7 bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-200 rounded-lg shadow-sm hover:bg-slate-100 text-xs">-</button>
-                            <span class="text-sm font-bold w-4 text-center">${item.qty}</span>
-                            <button onclick="changeCartQty(${item.id}, 1)" class="w-7 h-7 bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-200 rounded-lg shadow-sm hover:bg-slate-100 text-xs">+</button>
+                        <div class="cart-controls">
+                            <button class="cart-qty-btn" onclick="changeQty(${item.id}, -1)">-</button>
+                            <span style="font-weight:700; font-size:0.85rem;">${item.qty}</span>
+                            <button class="cart-qty-btn" onclick="changeQty(${item.id}, 1)">+</button>
                         </div>
                     `;
-            container.appendChild(el);
+            body.appendChild(el);
           });
 
-          document.getElementById("cart-total").innerText =
+          document.getElementById("cart-total-price").innerText =
             `R$ ${total.toFixed(2)}`;
         }
       }
 
-      function changeCartQty(id, delta) {
-        const item = cart.find((c) => c.id === id);
-        if (!item) return;
-
-        item.qty += delta;
-        if (item.qty <= 0) {
-          cart = cart.filter((c) => c.id !== id);
-        }
-        updateCartUI();
-      }
-
-      function toggleCartModal() {
-        const modal = document.getElementById("cart-modal");
-        modal.classList.toggle("hidden");
-      }
-
       function checkout() {
         if (cart.length === 0) return;
-        alert("Pedido enviado para a cozinha experimental com sucesso!");
+        alert(
+          "Pedido simulado com sucesso! Obrigado por utilizar o sistema de recomendação IHC.",
+        );
         cart = [];
-        updateCartUI();
-        toggleCartModal();
+        updateCart();
+        toggleCart();
       }
 
-      // Notification Toast
-      function showToast(message) {
+      /* ==========================================================================
+           9. TOAST NOTIFICATION SYSTEM
+           ========================================================================== */
+      function showToast(msg) {
         const toast = document.getElementById("toast");
-        document.getElementById("toast-message").innerText = message;
-        toast.classList.remove(
-          "translate-y-20",
-          "opacity-0",
-          "pointer-events-none",
-        );
+        toast.innerText = msg;
+        toast.classList.add("show");
 
         setTimeout(() => {
-          toast.classList.add(
-            "translate-y-20",
-            "opacity-0",
-            "pointer-events-none",
-          );
+          toast.classList.remove("show");
         }, 2500);
       }
 
-      // Initialize
+      /* Initial Setup */
       window.onload = function () {
-        switchView("wizard");
+        switchTab("wizard");
       };
     </script>
   </body>
