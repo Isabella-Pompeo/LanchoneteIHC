@@ -1,0 +1,1188 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sabor & Decisão - Lanchonete Inteligente</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                50: "#fff1f2",
+                100: "#ffe4e6",
+                500: "#f43f5e",
+                600: "#e11d48",
+                700: "#be123c",
+              },
+              amberGlow: "#f59e0b",
+            },
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <!-- FontAwesome Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <!-- Google Fonts Inter -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        transition:
+          background-color 0.3s,
+          color 0.3s;
+      }
+      .card-glow:hover {
+        box-shadow: 0 10px 25px -5px rgba(244, 63, 94, 0.25);
+      }
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 9999px;
+      }
+      .dark ::-webkit-scrollbar-thumb {
+        background: #475569;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 min-h-screen flex flex-col transition-colors duration-200"
+  >
+    <!-- Header / Navbar -->
+    <header
+      class="sticky top-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-sm"
+    >
+      <div
+        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between"
+      >
+        <div
+          class="flex items-center space-x-3 cursor-pointer"
+          onclick="switchView('wizard')"
+        >
+          <div
+            class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-amber-500 flex items-center justify-center text-white font-black text-xl shadow-md"
+          >
+            S&D
+          </div>
+          <div>
+            <h1
+              class="font-bold text-lg leading-none text-slate-900 dark:text-white"
+            >
+              Sabor & Decisão
+            </h1>
+            <p class="text-xs text-brand-600 dark:text-brand-400 font-medium">
+              Lanchonete IHC Experimental
+            </p>
+          </div>
+        </div>
+
+        <!-- Navigation Links & Actions -->
+        <div class="flex items-center space-x-2 sm:space-x-4">
+          <nav
+            class="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl text-xs sm:text-sm font-medium"
+          >
+            <button
+              id="nav-wizard"
+              onclick="switchView('wizard')"
+              class="px-3 py-1.5 rounded-lg transition-all text-slate-600 dark:text-slate-300"
+            >
+              <i class="fa-solid fa-wand-magic-sparkles mr-1"></i>
+              <span class="hidden sm:inline">Assistente</span>
+            </button>
+            <button
+              id="nav-menu"
+              onclick="switchView('menu')"
+              class="px-3 py-1.5 rounded-lg transition-all text-slate-600 dark:text-slate-300"
+            >
+              <i class="fa-solid fa-utensils mr-1"></i>
+              <span class="hidden sm:inline">Cardápio</span>
+            </button>
+            <button
+              id="nav-table"
+              onclick="switchView('table')"
+              class="px-3 py-1.5 rounded-lg transition-all text-slate-600 dark:text-slate-300"
+            >
+              <i class="fa-solid fa-table-cells mr-1"></i>
+              <span class="hidden sm:inline">Matriz IHC</span>
+            </button>
+          </nav>
+
+          <!-- Dark Mode Toggle -->
+          <button
+            id="theme-toggle"
+            onclick="toggleDarkMode()"
+            class="p-2.5 rounded-xl text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 transition"
+          >
+            <i id="theme-icon" class="fa-solid fa-moon"></i>
+          </button>
+
+          <!-- Cart Button -->
+          <button
+            onclick="toggleCartModal()"
+            class="relative p-2.5 rounded-xl bg-brand-50 text-brand-600 hover:bg-brand-100 dark:bg-brand-950/50 dark:text-brand-400 transition"
+          >
+            <i class="fa-solid fa-cart-shopping"></i>
+            <span
+              id="cart-badge"
+              class="absolute -top-1 -right-1 bg-brand-600 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center hidden"
+              >0</span
+            >
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <!-- VIEW 1: ASSISTENTE DE DECISÃO PASSO A PASSO (WIZARD) -->
+      <section id="view-wizard" class="max-w-3xl mx-auto space-y-6">
+        <div class="text-center space-y-2">
+          <span
+            class="px-3 py-1 bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300 rounded-full text-xs font-semibold tracking-wide uppercase"
+          >
+            Interação Humano-Computador
+          </span>
+          <h2
+            class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white"
+          >
+            O que você deseja comer hoje?
+          </h2>
+          <p class="text-sm text-slate-500 dark:text-slate-400">
+            Responda a 4 perguntas e nossa matriz de decisão encontrará o prato
+            perfeito.
+          </p>
+        </div>
+
+        <!-- Progress Indicator -->
+        <div
+          class="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm"
+        >
+          <div
+            class="flex justify-between text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2"
+          >
+            <span id="step-label">Passo 1 de 4</span>
+            <span id="step-title" class="text-brand-600 dark:text-brand-400"
+              >Sabor</span
+            >
+          </div>
+          <div
+            class="w-full bg-slate-100 dark:bg-slate-700 h-2.5 rounded-full overflow-hidden"
+          >
+            <div
+              id="step-bar"
+              class="bg-brand-600 h-full w-1/4 transition-all duration-300"
+            ></div>
+          </div>
+        </div>
+
+        <!-- Step Cards Box -->
+        <div
+          class="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-xl min-h-[360px] flex flex-col justify-between"
+        >
+          <!-- Step 1: Sabor -->
+          <div id="wizard-step-1" class="wizard-step space-y-6">
+            <h3
+              class="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2"
+            >
+              <i class="fa-solid fa-utensils text-brand-600"></i> Qual o seu
+              desejo de sabor agora?
+            </h3>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <button
+                onclick="selectOption('sabor', 'Salgado')"
+                class="option-btn p-5 rounded-2xl border-2 border-slate-200 dark:border-slate-700 hover:border-brand-500 dark:hover:border-brand-500 hover:bg-brand-50/50 dark:hover:bg-slate-700/50 text-left transition duration-200 flex flex-col justify-between h-36"
+              >
+                <i class="fa-solid fa-pizza-slice text-3xl text-brand-500"></i>
+                <div>
+                  <h4 class="font-bold text-slate-800 dark:text-white">
+                    Salgado
+                  </h4>
+                  <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                    Pratos clássicos e refeições do dia a dia
+                  </p>
+                </div>
+              </button>
+              <button
+                onclick="selectOption('sabor', 'Doce')"
+                class="option-btn p-5 rounded-2xl border-2 border-slate-200 dark:border-slate-700 hover:border-brand-500 dark:hover:border-brand-500 hover:bg-brand-50/50 dark:hover:bg-slate-700/50 text-left transition duration-200 flex flex-col justify-between h-36"
+              >
+                <i class="fa-solid fa-ice-cream text-3xl text-pink-500"></i>
+                <div>
+                  <h4 class="font-bold text-slate-800 dark:text-white">Doce</h4>
+                  <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                    Sobremesas, guloseimas e delícias
+                  </p>
+                </div>
+              </button>
+              <button
+                onclick="selectOption('sabor', 'Esquisito')"
+                class="option-btn p-5 rounded-2xl border-2 border-slate-200 dark:border-slate-700 hover:border-brand-500 dark:hover:border-brand-500 hover:bg-brand-50/50 dark:hover:bg-slate-700/50 text-left transition duration-200 flex flex-col justify-between h-36"
+              >
+                <i class="fa-solid fa-flask text-3xl text-purple-500"></i>
+                <div>
+                  <h4 class="font-bold text-slate-800 dark:text-white">
+                    Esquisito
+                  </h4>
+                  <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                    Para paladares corajosos ou peculiares
+                  </p>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Step 2: Valor -->
+          <div id="wizard-step-2" class="wizard-step space-y-6 hidden">
+            <h3
+              class="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2"
+            >
+              <i class="fa-solid fa-wallet text-brand-600"></i> Quanto você
+              pretende gastar?
+            </h3>
+            <div
+              id="step-2-options"
+              class="grid grid-cols-1 sm:grid-cols-2 gap-4"
+            >
+              <!-- Dynamic options based on previous selection -->
+            </div>
+          </div>
+
+          <!-- Step 3: Temperatura -->
+          <div id="wizard-step-3" class="wizard-step space-y-6 hidden">
+            <h3
+              class="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2"
+            >
+              <i class="fa-solid fa-temperature-half text-brand-600"></i>
+              Prefere a refeição em que temperatura?
+            </h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <button
+                onclick="selectOption('temperatura', 'Quente')"
+                class="option-btn p-5 rounded-2xl border-2 border-slate-200 dark:border-slate-700 hover:border-brand-500 dark:hover:border-brand-500 hover:bg-brand-50/50 dark:hover:bg-slate-700/50 text-left transition duration-200 flex flex-col justify-between h-36"
+              >
+                <i class="fa-solid fa-fire text-3xl text-orange-500"></i>
+                <div>
+                  <h4 class="font-bold text-slate-800 dark:text-white">
+                    Quente
+                  </h4>
+                  <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                    Saindo do forno ou da panela
+                  </p>
+                </div>
+              </button>
+              <button
+                onclick="selectOption('temperatura', 'Frio')"
+                class="option-btn p-5 rounded-2xl border-2 border-slate-200 dark:border-slate-700 hover:border-brand-500 dark:hover:border-brand-500 hover:bg-brand-50/50 dark:hover:bg-slate-700/50 text-left transition duration-200 flex flex-col justify-between h-36"
+              >
+                <i class="fa-solid fa-snowflake text-3xl text-sky-500"></i>
+                <div>
+                  <h4 class="font-bold text-slate-800 dark:text-white">Frio</h4>
+                  <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                    Geladinho ou em temperatura ambiente
+                  </p>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Step 4: Tempo de Preparo -->
+          <div id="wizard-step-4" class="wizard-step space-y-6 hidden">
+            <h3
+              class="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2"
+            >
+              <i class="fa-solid fa-clock text-brand-600"></i> Qual a sua
+              pressa?
+            </h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <button
+                onclick="selectOption('tempo', 'Rápido')"
+                class="option-btn p-5 rounded-2xl border-2 border-slate-200 dark:border-slate-700 hover:border-brand-500 dark:hover:border-brand-500 hover:bg-brand-50/50 dark:hover:bg-slate-700/50 text-left transition duration-200 flex flex-col justify-between h-36"
+              >
+                <i class="fa-solid fa-bolt text-3xl text-yellow-500"></i>
+                <div>
+                  <h4 class="font-bold text-slate-800 dark:text-white">
+                    Rápido
+                  </h4>
+                  <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                    Pronto em poucos minutos
+                  </p>
+                </div>
+              </button>
+              <button
+                onclick="selectOption('tempo', 'Demorado')"
+                class="option-btn p-5 rounded-2xl border-2 border-slate-200 dark:border-slate-700 hover:border-brand-500 dark:hover:border-brand-500 hover:bg-brand-50/50 dark:hover:bg-slate-700/50 text-left transition duration-200 flex flex-col justify-between h-36"
+              >
+                <i
+                  class="fa-solid fa-hourglass-half text-3xl text-indigo-500"
+                ></i>
+                <div>
+                  <h4 class="font-bold text-slate-800 dark:text-white">
+                    Demorado
+                  </h4>
+                  <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                    Vale a pena esperar o preparo especial
+                  </p>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Controls & Navigation -->
+          <div
+            class="flex items-center justify-between pt-6 border-t border-slate-100 dark:border-slate-700 mt-6"
+          >
+            <button
+              id="wizard-back-btn"
+              onclick="prevStep()"
+              class="px-4 py-2 text-sm font-semibold text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 transition hidden"
+            >
+              <i class="fa-solid fa-arrow-left mr-1"></i> Voltar
+            </button>
+            <button
+              onclick="resetWizard()"
+              class="px-4 py-2 text-sm font-semibold text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition ml-auto"
+            >
+              <i class="fa-solid fa-rotate-right mr-1"></i> Reiniciar
+            </button>
+          </div>
+        </div>
+
+        <!-- RESULT CARD DISPLAY -->
+        <div id="wizard-result" class="hidden">
+          <!-- Injected via JavaScript -->
+        </div>
+      </section>
+
+      <!-- VIEW 2: CARDÁPIO COMPLETO E FILTROS -->
+      <section id="view-menu" class="hidden space-y-6">
+        <div
+          class="flex flex-col md:flex-row md:items-center justify-between gap-4"
+        >
+          <div>
+            <h2 class="text-2xl font-bold text-slate-900 dark:text-white">
+              Cardápio Geral
+            </h2>
+            <p class="text-sm text-slate-500 dark:text-slate-400">
+              Explore todos os 17 pratos catalogados na matriz IHC
+            </p>
+          </div>
+
+          <!-- Interactive Filter Controls -->
+          <div class="flex flex-wrap gap-2">
+            <input
+              type="text"
+              id="menu-search"
+              oninput="filterMenu()"
+              placeholder="Buscar prato..."
+              class="px-4 py-2 rounded-xl text-sm border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-500"
+            />
+            <select
+              id="filter-sabor"
+              onchange="filterMenu()"
+              class="px-3 py-2 rounded-xl text-sm border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300"
+            >
+              <option value="">Todos Sabores</option>
+              <option value="Salgado">Salgado</option>
+              <option value="Doce">Doce</option>
+              <option value="Esquisito">Esquisito</option>
+            </select>
+            <select
+              id="filter-valor"
+              onchange="filterMenu()"
+              class="px-3 py-2 rounded-xl text-sm border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300"
+            >
+              <option value="">Todos Valores</option>
+              <option value="Barato">Barato</option>
+              <option value="Caro">Caro</option>
+              <option value="De graça">De graça</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Menu Grid -->
+        <div
+          id="menu-grid"
+          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+        >
+          <!-- Dynamically generated via JavaScript -->
+        </div>
+      </section>
+
+      <!-- VIEW 3: MATRIZ DE DECISÃO TABULAR (IHC) -->
+      <section id="view-table" class="hidden space-y-6">
+        <div
+          class="flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+        >
+          <div>
+            <h2 class="text-2xl font-bold text-slate-900 dark:text-white">
+              Tabela de Decisão IHC
+            </h2>
+            <p class="text-sm text-slate-500 dark:text-slate-400">
+              A matriz exata utilizada em aula para derivar a experiência do
+              usuário
+            </p>
+          </div>
+          <div
+            class="text-xs text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700"
+          >
+            Total:
+            <span id="table-count" class="font-bold text-brand-600">17</span>
+            regras cadastradas
+          </div>
+        </div>
+
+        <div
+          class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden"
+        >
+          <div class="overflow-x-auto">
+            <table
+              class="w-full text-left text-sm text-slate-600 dark:text-slate-300"
+            >
+              <thead
+                class="bg-slate-50 dark:bg-slate-700/50 text-slate-700 dark:text-slate-200 font-bold uppercase text-xs tracking-wider border-b border-slate-200 dark:border-slate-700"
+              >
+                <tr>
+                  <th class="py-3.5 px-4">Sabor</th>
+                  <th class="py-3.5 px-4">Valor</th>
+                  <th class="py-3.5 px-4">Temperatura</th>
+                  <th class="py-3.5 px-4">Tempo de Preparo</th>
+                  <th class="py-3.5 px-4 text-brand-600 dark:text-brand-400">
+                    Comida Recomendada
+                  </th>
+                  <th class="py-3.5 px-4 text-right">Ação</th>
+                </tr>
+              </thead>
+              <tbody
+                id="ihc-table-body"
+                class="divide-y divide-slate-100 dark:divide-slate-700"
+              >
+                <!-- Injected via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- SHOPPING CART MODAL -->
+    <div
+      id="cart-modal"
+      class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex justify-end hidden transition-opacity"
+    >
+      <div
+        class="bg-white dark:bg-slate-900 w-full max-w-md h-full shadow-2xl flex flex-col p-6 border-l border-slate-200 dark:border-slate-800"
+      >
+        <div
+          class="flex justify-between items-center pb-4 border-b border-slate-100 dark:border-slate-800"
+        >
+          <h3
+            class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2"
+          >
+            <i class="fa-solid fa-bag-shopping text-brand-600"></i> Seu Pedido
+          </h3>
+          <button
+            onclick="toggleCartModal()"
+            class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-2"
+          >
+            <i class="fa-solid fa-xmark text-xl"></i>
+          </button>
+        </div>
+
+        <!-- Cart Items Container -->
+        <div id="cart-items" class="flex-grow overflow-y-auto py-4 space-y-4">
+          <!-- Cart items or empty state -->
+        </div>
+
+        <!-- Cart Footer -->
+        <div
+          class="pt-4 border-t border-slate-100 dark:border-slate-800 space-y-4"
+        >
+          <div
+            class="flex justify-between font-bold text-slate-900 dark:text-white text-lg"
+          >
+            <span>Total Estimado:</span>
+            <span id="cart-total" class="text-brand-600 dark:text-brand-400"
+              >R$ 0,00</span
+            >
+          </div>
+          <button
+            onclick="checkout()"
+            class="w-full py-3.5 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-lg transition active:scale-98"
+          >
+            Finalizar Pedido
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- NOTIFICATION TOAST -->
+    <div
+      id="toast"
+      class="fixed bottom-6 right-6 z-50 bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 transition-all duration-300 translate-y-20 opacity-0 pointer-events-none"
+    >
+      <i id="toast-icon" class="fa-solid fa-circle-check text-green-400"></i>
+      <span id="toast-message" class="text-sm font-medium"
+        >Item adicionado com sucesso!</span
+      >
+    </div>
+
+    <!-- JAVASCRIPT LOGIC & DATABASE -->
+    <script>
+      // Data derived directly from the IHC Decision Matrix provided in the screenshot
+      const ihcMatrix = [
+        {
+          id: 1,
+          sabor: "Salgado",
+          valor: "Barato",
+          temp: "Quente",
+          tempo: "Rápido",
+          prato: "Marmita",
+          preco: 18.0,
+          desc: "Refeição caseira clássica, farta e quentinha em poucos minutos.",
+          icon: "fa-box",
+          tag: "Prático",
+        },
+        {
+          id: 2,
+          sabor: "Salgado",
+          valor: "Barato",
+          temp: "Frio",
+          tempo: "Rápido",
+          prato: "Sanduíche de frango",
+          preco: 12.5,
+          desc: "Sanduíche leve e geladinho, recheado com maionese especial e frango desfiado.",
+          icon: "fa-bread-slice",
+          tag: "Lanche",
+        },
+        {
+          id: 3,
+          sabor: "Salgado",
+          valor: "Barato",
+          temp: "Quente",
+          tempo: "Demorado",
+          prato: "Macarronada",
+          preco: 22.0,
+          desc: "Massa artesanal cozida lentamente ao molho de tomate fresco e queijo.",
+          icon: "fa-bowl-rice",
+          tag: "Comfort Food",
+        },
+        {
+          id: 4,
+          sabor: "Salgado",
+          valor: "Barato",
+          temp: "Frio",
+          tempo: "Demorado",
+          prato: "Salpicão",
+          preco: 15.0,
+          desc: "Mistura crocante e refrigerada de legumes, frango e batata palha.",
+          icon: "fa-leaf",
+          tag: "Refrescante",
+        },
+        {
+          id: 5,
+          sabor: "Salgado",
+          valor: "Caro",
+          temp: "Quente",
+          tempo: "Rápido",
+          prato: "Pizza",
+          preco: 55.0,
+          desc: "Fatia napolitana gourmet assada em forno a lenha de alta temperatura.",
+          icon: "fa-pizza-slice",
+          tag: "Gourmet",
+        },
+        {
+          id: 6,
+          sabor: "Salgado",
+          valor: "Caro",
+          temp: "Frio",
+          tempo: "Rápido",
+          prato: "Sushi",
+          preco: 68.0,
+          desc: "Combinado individual fresco de salmão e hossomakis montados na hora.",
+          icon: "fa-fish",
+          tag: "Japonês",
+        },
+        {
+          id: 7,
+          sabor: "Salgado",
+          valor: "Caro",
+          temp: "Quente",
+          tempo: "Demorado",
+          prato: "Lasanha",
+          preco: 42.0,
+          desc: "Camadas generosas de massa, bolonhesa rica e queijo gratinado.",
+          icon: "fa-layer-group",
+          tag: "Especial",
+        },
+        {
+          id: 8,
+          sabor: "Salgado",
+          valor: "Caro",
+          temp: "Frio",
+          tempo: "Demorado",
+          prato: "Torta salgada",
+          preco: 35.0,
+          desc: "Torta artesanal fria de frango com cream cheese e massa folhada.",
+          icon: "fa-pie-chart",
+          tag: "Artesanal",
+        },
+        {
+          id: 9,
+          sabor: "Doce",
+          valor: "Barato",
+          temp: "Quente",
+          tempo: "Rápido",
+          prato: "Churros",
+          preco: 8.0,
+          desc: "Crocantes por fora, macios por dentro, recheados de doce de leite aquecido.",
+          icon: "fa-scroll",
+          tag: "Sobremesa",
+        },
+        {
+          id: 10,
+          sabor: "Doce",
+          valor: "Barato",
+          temp: "Frio",
+          tempo: "Rápido",
+          prato: "Açaí artesanal",
+          preco: 14.0,
+          desc: "Creme puro de açaí gelado servido com banana e granola crocante.",
+          icon: "fa-wine-glass-stripe",
+          tag: "Energético",
+        },
+        {
+          id: 11,
+          sabor: "Doce",
+          valor: "Barato",
+          temp: "Quente",
+          tempo: "Demorado",
+          prato: "Arroz-doce",
+          preco: 9.5,
+          desc: "Cozido suavemente no leite de coco com bastante canela polvilhada.",
+          icon: "fa-spoon",
+          tag: "Tradicional",
+        },
+        {
+          id: 12,
+          sabor: "Doce",
+          valor: "Barato",
+          temp: "Frio",
+          tempo: "Demorado",
+          prato: "Pudim",
+          preco: 10.0,
+          desc: "Pudim de leite condensado super liso com calda de caramelo brilhante.",
+          icon: "fa-circle-dot",
+          tag: "Favorito",
+        },
+        {
+          id: 13,
+          sabor: "Doce",
+          valor: "Caro",
+          temp: "Quente",
+          tempo: "Rápido",
+          prato: "Petit gâteau",
+          preco: 28.0,
+          desc: "Bolo quente de chocolate belga com recheio cremoso e sorvete de baunilha.",
+          icon: "fa-cookie",
+          tag: "Premium",
+        },
+        {
+          id: 14,
+          sabor: "Doce",
+          valor: "Caro",
+          temp: "Frio",
+          tempo: "Rápido",
+          prato: "Milkshake",
+          preco: 24.0,
+          desc: "Batido denso de sorvete de morango fresco com bastante chantilly.",
+          icon: "fa-glass-water",
+          tag: "Bebida",
+        },
+        {
+          id: 15,
+          sabor: "Doce",
+          valor: "Caro",
+          temp: "Quente",
+          tempo: "Demorado",
+          prato: "Torta de morango",
+          preco: 32.0,
+          desc: "Torta de morango assada com creme confeiteiro aquecido.",
+          icon: "fa-stroopwafel",
+          tag: "Sofisticado",
+        },
+        {
+          id: 16,
+          sabor: "Doce",
+          valor: "Caro",
+          temp: "Frio",
+          tempo: "Demorado",
+          prato: "Bolo",
+          preco: 26.0,
+          desc: "Fatia alta de bolo gelado de chocolate recheado com brigadeiro.",
+          icon: "fa-cake-candles",
+          tag: "Festa",
+        },
+        {
+          id: 17,
+          sabor: "Esquisito",
+          valor: "De graça",
+          temp: "Quente",
+          tempo: "Rápido",
+          prato: "MINGUAU COM SAL",
+          preco: 0.0,
+          desc: "A controversa iguaria experimental da aula de IHC! Servido bem quente e salgado.",
+          icon: "fa-flask-vial",
+          tag: "Meme IHC",
+        },
+      ];
+
+      // State Management
+      let currentStep = 1;
+      let wizardSelections = {
+        sabor: null,
+        valor: null,
+        temperatura: null,
+        tempo: null,
+      };
+      let cart = [];
+
+      // UI View Switcher
+      function switchView(viewName) {
+        document.getElementById("view-wizard").classList.add("hidden");
+        document.getElementById("view-menu").classList.add("hidden");
+        document.getElementById("view-table").classList.add("hidden");
+
+        document.querySelectorAll("nav button").forEach((btn) => {
+          btn.classList.remove(
+            "bg-white",
+            "dark:bg-slate-700",
+            "text-brand-600",
+            "shadow-sm",
+          );
+          btn.classList.add("text-slate-600", "dark:text-slate-300");
+        });
+
+        const activeBtn = document.getElementById(`nav-${viewName}`);
+        if (activeBtn) {
+          activeBtn.classList.add(
+            "bg-white",
+            "dark:bg-slate-700",
+            "text-brand-600",
+            "shadow-sm",
+          );
+        }
+
+        if (viewName === "wizard")
+          document.getElementById("view-wizard").classList.remove("hidden");
+        if (viewName === "menu") {
+          document.getElementById("view-menu").classList.remove("hidden");
+          renderMenuCards(ihcMatrix);
+        }
+        if (viewName === "table") {
+          document.getElementById("view-table").classList.remove("hidden");
+          renderIHCTable();
+        }
+      }
+
+      // Dark Mode Logic
+      function toggleDarkMode() {
+        const isDark = document.documentElement.classList.toggle("dark");
+        const icon = document.getElementById("theme-icon");
+        if (isDark) {
+          icon.className = "fa-solid fa-sun text-amber-400";
+        } else {
+          icon.className = "fa-solid fa-moon text-slate-500";
+        }
+      }
+
+      // Wizard Logic
+      function selectOption(category, value) {
+        wizardSelections[category] = value;
+
+        if (currentStep === 1) {
+          // Populate step 2 options based on Sabor selection
+          const step2Container = document.getElementById("step-2-options");
+          step2Container.innerHTML = "";
+
+          let allowedValues = [];
+          if (value === "Esquisito") {
+            allowedValues = ["De graça"];
+          } else {
+            allowedValues = ["Barato", "Caro"];
+          }
+
+          allowedValues.forEach((val) => {
+            const btn = document.createElement("button");
+            btn.className =
+              "option-btn p-5 rounded-2xl border-2 border-slate-200 dark:border-slate-700 hover:border-brand-500 hover:bg-brand-50/50 dark:hover:bg-slate-700/50 text-left transition duration-200 flex flex-col justify-between h-36";
+            btn.onclick = () => selectOption("valor", val);
+            btn.innerHTML = `
+                        <i class="fa-solid ${val === "Barato" ? "fa-coins text-emerald-500" : val === "Caro" ? "fa-gem text-indigo-500" : "fa-gift text-pink-500"} text-3xl"></i>
+                        <div>
+                            <h4 class="font-bold text-slate-800 dark:text-white">${val}</h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">${val === "De graça" ? "Cortesia da casa" : "Faixa de preço estimada"}</p>
+                        </div>
+                    `;
+            step2Container.appendChild(btn);
+          });
+        }
+
+        if (currentStep < 4) {
+          currentStep++;
+          updateWizardUI();
+        } else {
+          // Show Result
+          calculateResult();
+        }
+      }
+
+      function prevStep() {
+        if (currentStep > 1) {
+          currentStep--;
+          updateWizardUI();
+        }
+      }
+
+      function resetWizard() {
+        currentStep = 1;
+        wizardSelections = {
+          sabor: null,
+          valor: null,
+          temperatura: null,
+          tempo: null,
+        };
+        document.getElementById("wizard-result").classList.add("hidden");
+        updateWizardUI();
+      }
+
+      function updateWizardUI() {
+        // Hide all steps
+        for (let i = 1; i <= 4; i++) {
+          document.getElementById(`wizard-step-${i}`).classList.add("hidden");
+        }
+        // Show current
+        document
+          .getElementById(`wizard-step-${currentStep}`)
+          .classList.remove("hidden");
+
+        // Update Progress Bar & Labels
+        const stepTitles = [
+          "Sabor",
+          "Valor",
+          "Temperatura",
+          "Tempo de Preparo",
+        ];
+        document.getElementById("step-label").innerText =
+          `Passo ${currentStep} de 4`;
+        document.getElementById("step-title").innerText =
+          stepTitles[currentStep - 1];
+        document.getElementById("step-bar").style.width =
+          `${(currentStep / 4) * 100}%`;
+
+        // Back button visibility
+        const backBtn = document.getElementById("wizard-back-btn");
+        if (currentStep > 1) {
+          backBtn.classList.remove("hidden");
+        } else {
+          backBtn.classList.add("hidden");
+        }
+      }
+
+      function calculateResult() {
+        const match = ihcMatrix.find(
+          (item) =>
+            item.sabor === wizardSelections.sabor &&
+            item.valor === wizardSelections.valor &&
+            item.temp === wizardSelections.temperatura &&
+            item.tempo === wizardSelections.tempo,
+        );
+
+        const resultContainer = document.getElementById("wizard-result");
+        resultContainer.classList.remove("hidden");
+
+        if (match) {
+          resultContainer.innerHTML = `
+                    <div class="bg-gradient-to-br from-brand-500 to-amber-600 rounded-3xl p-1 text-white shadow-2xl animate-fade-in">
+                        <div class="bg-white dark:bg-slate-800 rounded-[22px] p-6 sm:p-8 text-slate-800 dark:text-slate-100">
+                            <div class="flex items-center justify-between">
+                                <span class="px-3 py-1 bg-brand-100 text-brand-700 dark:bg-brand-900/50 dark:text-brand-300 rounded-full text-xs font-bold uppercase tracking-wider">
+                                    Combinação Perfeita Encontrada!
+                                </span>
+                                <span class="text-2xl font-black text-brand-600 dark:text-brand-400">
+                                    ${match.preco === 0 ? "GRÁTIS" : `R$ ${match.preco.toFixed(2)}`}
+                                </span>
+                            </div>
+
+                            <div class="mt-6 flex flex-col md:flex-row items-center gap-6">
+                                <div class="w-24 h-24 rounded-2xl bg-brand-50 dark:bg-slate-700 flex items-center justify-center text-brand-600 dark:text-brand-400 text-5xl flex-shrink-0">
+                                    <i class="fa-solid ${match.icon}"></i>
+                                </div>
+                                <div class="space-y-2 text-center md:text-left flex-grow">
+                                    <h3 class="text-2xl font-extrabold text-slate-900 dark:text-white">${match.prato}</h3>
+                                    <p class="text-sm text-slate-500 dark:text-slate-400">${match.desc}</p>
+                                    <div class="flex flex-wrap justify-center md:justify-start gap-2 pt-2">
+                                        <span class="text-xs bg-slate-100 dark:bg-slate-700 px-2.5 py-1 rounded-md font-medium"><i class="fa-solid fa-utensils text-slate-400 mr-1"></i>${match.sabor}</span>
+                                        <span class="text-xs bg-slate-100 dark:bg-slate-700 px-2.5 py-1 rounded-md font-medium"><i class="fa-solid fa-tag text-slate-400 mr-1"></i>${match.valor}</span>
+                                        <span class="text-xs bg-slate-100 dark:bg-slate-700 px-2.5 py-1 rounded-md font-medium"><i class="fa-solid fa-temperature-half text-slate-400 mr-1"></i>${match.temp}</span>
+                                        <span class="text-xs bg-slate-100 dark:bg-slate-700 px-2.5 py-1 rounded-md font-medium"><i class="fa-solid fa-clock text-slate-400 mr-1"></i>${match.tempo}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-8 pt-6 border-t border-slate-100 dark:border-slate-700 flex flex-col sm:flex-row gap-3">
+                                <button onclick="addToCart(${match.id})" class="flex-1 py-3.5 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-lg transition flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-plus"></i> Adicionar ao Pedido
+                                </button>
+                                <button onclick="resetWizard()" class="py-3.5 px-6 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 font-semibold rounded-xl transition">
+                                    Refazer Escolha
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+        } else {
+          resultContainer.innerHTML = `
+                    <div class="bg-amber-50 dark:bg-slate-800 border border-amber-200 dark:border-amber-900/50 rounded-2xl p-6 text-center space-y-3">
+                        <i class="fa-solid fa-circle-question text-amber-500 text-4xl"></i>
+                        <h3 class="font-bold text-slate-800 dark:text-white">Combinação não mapeada</h3>
+                        <p class="text-xs text-slate-500">Essa combinação específica de critérios não possui correspondente na matriz de IHC.</p>
+                        <button onclick="resetWizard()" class="px-4 py-2 bg-slate-800 text-white rounded-xl text-sm font-semibold">Tentar Novamente</button>
+                    </div>
+                `;
+        }
+        // Scroll to result smoothly
+        resultContainer.scrollIntoView({ behavior: "smooth" });
+      }
+
+      // Render Cards in Menu
+      function renderMenuCards(items) {
+        const grid = document.getElementById("menu-grid");
+        grid.innerHTML = "";
+
+        items.forEach((item) => {
+          const card = document.createElement("div");
+          card.className =
+            "bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 shadow-sm hover:shadow-md transition card-glow flex flex-col justify-between";
+          card.innerHTML = `
+                    <div>
+                        <div class="flex items-start justify-between">
+                            <div class="w-12 h-12 rounded-xl bg-brand-50 dark:bg-slate-700 text-brand-600 dark:text-brand-400 flex items-center justify-center text-2xl">
+                                <i class="fa-solid ${item.icon}"></i>
+                            </div>
+                            <span class="px-2.5 py-1 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-lg text-xs font-semibold">
+                                ${item.tag}
+                            </span>
+                        </div>
+                        <h3 class="font-bold text-slate-900 dark:text-white text-lg mt-4">${item.prato}</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">${item.desc}</p>
+                        
+                        <div class="flex flex-wrap gap-1 mt-3">
+                            <span class="text-[10px] bg-slate-50 dark:bg-slate-900 px-2 py-0.5 rounded border border-slate-100 dark:border-slate-700 text-slate-500">${item.sabor}</span>
+                            <span class="text-[10px] bg-slate-50 dark:bg-slate-900 px-2 py-0.5 rounded border border-slate-100 dark:border-slate-700 text-slate-500">${item.valor}</span>
+                            <span class="text-[10px] bg-slate-50 dark:bg-slate-900 px-2 py-0.5 rounded border border-slate-100 dark:border-slate-700 text-slate-500">${item.temp}</span>
+                            <span class="text-[10px] bg-slate-50 dark:bg-slate-900 px-2 py-0.5 rounded border border-slate-100 dark:border-slate-700 text-slate-500">${item.tempo}</span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between mt-5 pt-4 border-t border-slate-100 dark:border-slate-700">
+                        <span class="font-extrabold text-slate-900 dark:text-white text-base">
+                            ${item.preco === 0 ? "GRÁTIS" : `R$ ${item.preco.toFixed(2)}`}
+                        </span>
+                        <button onclick="addToCart(${item.id})" class="p-2.5 bg-brand-600 hover:bg-brand-700 text-white rounded-xl transition">
+                            <i class="fa-solid fa-cart-plus"></i>
+                        </button>
+                    </div>
+                `;
+          grid.appendChild(card);
+        });
+      }
+
+      // Filter Menu
+      function filterMenu() {
+        const search = document
+          .getElementById("menu-search")
+          .value.toLowerCase();
+        const sabor = document.getElementById("filter-sabor").value;
+        const valor = document.getElementById("filter-valor").value;
+
+        const filtered = ihcMatrix.filter((item) => {
+          const matchesSearch =
+            item.prato.toLowerCase().includes(search) ||
+            item.desc.toLowerCase().includes(search);
+          const matchesSabor = !sabor || item.sabor === sabor;
+          const matchesValor = !valor || item.valor === valor;
+          return matchesSearch && matchesSabor && matchesValor;
+        });
+
+        renderMenuCards(filtered);
+      }
+
+      // Render IHC Table
+      function renderIHCTable() {
+        const tbody = document.getElementById("ihc-table-body");
+        tbody.innerHTML = "";
+
+        ihcMatrix.forEach((row) => {
+          const tr = document.createElement("tr");
+          tr.className =
+            "hover:bg-slate-50 dark:hover:bg-slate-700/30 transition";
+          tr.innerHTML = `
+                    <td class="py-3 px-4 font-medium text-slate-800 dark:text-slate-200">${row.sabor}</td>
+                    <td class="py-3 px-4">${row.valor}</td>
+                    <td class="py-3 px-4">${row.temp}</td>
+                    <td class="py-3 px-4">${row.tempo}</td>
+                    <td class="py-3 px-4 font-bold text-slate-900 dark:text-white">
+                        <span class="inline-flex items-center gap-1.5">
+                            <i class="fa-solid ${row.icon} text-brand-500 text-xs"></i>
+                            ${row.prato}
+                        </span>
+                    </td>
+                    <td class="py-3 px-4 text-right">
+                        <button onclick="addToCart(${row.id})" class="text-xs bg-slate-100 hover:bg-brand-50 hover:text-brand-600 dark:bg-slate-700 dark:hover:bg-brand-900/40 dark:hover:text-brand-300 px-2.5 py-1.5 rounded-lg transition">
+                            + Pedir
+                        </button>
+                    </td>
+                `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      // Shopping Cart Logic
+      function addToCart(itemId) {
+        const item = ihcMatrix.find((i) => i.id === itemId);
+        if (!item) return;
+
+        const existing = cart.find((c) => c.id === itemId);
+        if (existing) {
+          existing.qty++;
+        } else {
+          cart.push({ ...item, qty: 1 });
+        }
+
+        updateCartUI();
+        showToast(`"${item.prato}" foi adicionado!`);
+      }
+
+      function updateCartUI() {
+        const badge = document.getElementById("cart-badge");
+        const totalQty = cart.reduce((acc, curr) => acc + curr.qty, 0);
+
+        if (totalQty > 0) {
+          badge.innerText = totalQty;
+          badge.classList.remove("hidden");
+        } else {
+          badge.classList.add("hidden");
+        }
+
+        // Render modal items
+        const container = document.getElementById("cart-items");
+        if (cart.length === 0) {
+          container.innerHTML = `
+                    <div class="text-center py-12 text-slate-400 space-y-2">
+                        <i class="fa-solid fa-basket-shopping text-4xl"></i>
+                        <p class="text-sm">Sua sacola está vazia.</p>
+                    </div>
+                `;
+        } else {
+          container.innerHTML = "";
+          let total = 0;
+
+          cart.forEach((item) => {
+            total += item.preco * item.qty;
+            const el = document.createElement("div");
+            el.className =
+              "flex items-center justify-between bg-slate-50 dark:bg-slate-800/60 p-3.5 rounded-xl border border-slate-100 dark:border-slate-800";
+            el.innerHTML = `
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-white dark:bg-slate-700 flex items-center justify-center text-brand-600 dark:text-brand-400">
+                                <i class="fa-solid ${item.icon}"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-sm text-slate-900 dark:text-white">${item.prato}</h4>
+                                <span class="text-xs text-slate-500">${item.preco === 0 ? "Grátis" : `R$ ${item.preco.toFixed(2)}`}</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="changeCartQty(${item.id}, -1)" class="w-7 h-7 bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-200 rounded-lg shadow-sm hover:bg-slate-100 text-xs">-</button>
+                            <span class="text-sm font-bold w-4 text-center">${item.qty}</span>
+                            <button onclick="changeCartQty(${item.id}, 1)" class="w-7 h-7 bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-200 rounded-lg shadow-sm hover:bg-slate-100 text-xs">+</button>
+                        </div>
+                    `;
+            container.appendChild(el);
+          });
+
+          document.getElementById("cart-total").innerText =
+            `R$ ${total.toFixed(2)}`;
+        }
+      }
+
+      function changeCartQty(id, delta) {
+        const item = cart.find((c) => c.id === id);
+        if (!item) return;
+
+        item.qty += delta;
+        if (item.qty <= 0) {
+          cart = cart.filter((c) => c.id !== id);
+        }
+        updateCartUI();
+      }
+
+      function toggleCartModal() {
+        const modal = document.getElementById("cart-modal");
+        modal.classList.toggle("hidden");
+      }
+
+      function checkout() {
+        if (cart.length === 0) return;
+        alert("Pedido enviado para a cozinha experimental com sucesso!");
+        cart = [];
+        updateCartUI();
+        toggleCartModal();
+      }
+
+      // Notification Toast
+      function showToast(message) {
+        const toast = document.getElementById("toast");
+        document.getElementById("toast-message").innerText = message;
+        toast.classList.remove(
+          "translate-y-20",
+          "opacity-0",
+          "pointer-events-none",
+        );
+
+        setTimeout(() => {
+          toast.classList.add(
+            "translate-y-20",
+            "opacity-0",
+            "pointer-events-none",
+          );
+        }, 2500);
+      }
+
+      // Initialize
+      window.onload = function () {
+        switchView("wizard");
+      };
+    </script>
+  </body>
+</html>
