@@ -554,7 +554,7 @@
         border-radius: var(--radius-sm);
       }
 
-      /* Easter Egg Styling for MINGUAU COM SAL */
+      /* Easter Egg Styling for MINGAU COM SAL */
       .meme-alert {
         background-color: #fef2f2;
         border: 2px dashed #ef4444;
@@ -1327,7 +1327,7 @@
           temp: "Frio",
           tempo: "Rápido",
           prato: "Sanduíche de frango",
-          preco: 12.5,
+          preco: 12.0,
           emoji: "🥪",
           desc: "Sanduíche levinho e prático.",
         },
@@ -1338,7 +1338,7 @@
           temp: "Quente",
           tempo: "Demorado",
           prato: "Macarronada",
-          preco: 22.0,
+          preco: 20.0,
           desc: "Massa com bastante molho vermelho.",
         },
         {
@@ -1359,7 +1359,7 @@
           tempo: "Rápido",
           prato: "Pizza",
           preco: 55.0,
-          desc: "Fatia quentinha de alta qualidade.",
+          desc: "Pizza grande quentinha de alta qualidade.",
         },
         {
           id: 6,
@@ -1388,7 +1388,7 @@
           temp: "Frio",
           tempo: "Demorado",
           prato: "Torta salgada",
-          preco: 35.0,
+          preco: 40.0,
           desc: "Torta gelada recheada e cremosa.",
         },
         {
@@ -1418,7 +1418,7 @@
           temp: "Quente",
           tempo: "Demorado",
           prato: "Arroz-doce",
-          preco: 9.5,
+          preco: 12.0,
           desc: "Tradicional arroz-doce com canela.",
         },
         {
@@ -1447,9 +1447,9 @@
           valor: "Caro",
           temp: "Frio",
           tempo: "Rápido",
-          prato: "Milkshake",
+          prato: "Banana split",
           preco: 24.0,
-          desc: "Milkshake cremoso de morango.",
+          desc: "Banana com três bolas de sorvete e coberturas.",
         },
         {
           id: 15,
@@ -1457,9 +1457,9 @@
           valor: "Caro",
           temp: "Quente",
           tempo: "Demorado",
-          prato: "Torta de morango",
-          preco: 32.0,
-          desc: "Torta fina com recheio quentinho.",
+          prato: "Torta de maçã",
+          preco: 42.0,
+          desc: "Torta assada com maçãs e canela quentinha.",
         },
         {
           id: 16,
@@ -1468,8 +1468,8 @@
           temp: "Frio",
           tempo: "Demorado",
           prato: "Bolo",
-          preco: 26.0,
-          desc: "Fatia artesanal de bolo de chocolate.",
+          preco: 40.0,
+          desc: "Bolo artesanal inteiro de chocolate.",
         },
         {
           id: 17,
@@ -1477,7 +1477,7 @@
           valor: "De graça",
           temp: "Quente",
           tempo: "Rápido",
-          prato: "MINGUAU COM SAL",
+          prato: "MINGAU COM SAL",
           preco: 0.0,
           emoji: "🥣",
           desc: "A exótica e icônica iguaria da aula de IHC!",
@@ -1629,7 +1629,7 @@
         container.style.display = "block";
 
         if (match) {
-          const isMeme = match.prato === "MINGUAU COM SAL";
+          const isMeme = match.prato === "MINGAU COM SAL";
 
           container.innerHTML = `
                     <div class="result-box">
@@ -1655,7 +1655,7 @@
                               isMeme
                                 ? `
                                 <div class="meme-alert">
-                                    ⚠️ <strong>SISTEMA IHC:</strong> Combinação lendária identificada! O famoso Minguau com Sal da aula de IHC. Serve tanto para alimentar quanto para testar seus limites de paladar!
+                                    ⚠️ <strong>SISTEMA IHC:</strong> Combinação lendária identificada! O famoso Mingau com Sal da aula de IHC. Serve tanto para alimentar quanto para testar seus limites de paladar!
                                 </div>
                             `
                                 : ""
@@ -1746,7 +1746,7 @@
 
         ihcData.forEach((row) => {
           const tr = document.createElement("tr");
-          if (row.prato === "MINGUAU COM SAL") tr.className = "row-meme";
+          if (row.prato === "MINGAU COM SAL") tr.className = "row-meme";
 
           tr.innerHTML = `
                     <td>${row.id}</td>
