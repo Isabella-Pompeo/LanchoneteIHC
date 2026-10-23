@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Decisão & Sabor - Lanchonete IHC</title>
+    <title>Decisão & Sabor - Lanchonete IIA</title>
     <style>
       /* ==========================================================================
            1. DESIGN TOKENS & CSS VARIABLES
@@ -709,7 +709,7 @@
       }
 
       /* ==========================================================================
-           7. MATRIZ IHC - VISÃO TABELA ORIGINAL
+           7. MATRIZ IIA - VISÃO TABELA ORIGINAL
            ========================================================================== */
       .table-wrapper {
         background-color: var(--bg-card);
@@ -723,14 +723,14 @@
         overflow-x: auto;
       }
 
-      .ihc-table {
+      .iia-table {
         width: 100%;
         border-collapse: collapse;
         text-align: left;
         font-size: 0.875rem;
       }
 
-      .ihc-table th {
+      .iia-table th {
         background-color: var(--bg-subtle);
         color: var(--text-primary);
         font-weight: 700;
@@ -741,25 +741,25 @@
         letter-spacing: 0.05em;
       }
 
-      .ihc-table td {
+      .iia-table td {
         padding: 0.85rem 1rem;
         border-bottom: 1px solid var(--border-color);
         color: var(--text-secondary);
       }
 
-      .ihc-table tbody tr:nth-child(even) {
+      .iia-table tbody tr:nth-child(even) {
         background-color: rgba(0, 0, 0, 0.015);
       }
-      [data-theme="dark"] .ihc-table tbody tr:nth-child(even) {
+      [data-theme="dark"] .iia-table tbody tr:nth-child(even) {
         background-color: rgba(255, 255, 255, 0.02);
       }
 
-      .ihc-table tbody tr:hover {
+      .iia-table tbody tr:hover {
         background-color: var(--brand-subtle);
         color: var(--text-primary);
       }
 
-      .ihc-table tbody tr.row-meme {
+      .iia-table tbody tr.row-meme {
         background-color: var(--accent-amber-subtle);
         font-weight: 700;
       }
@@ -956,7 +956,7 @@
           <div class="brand-badge">D&S</div>
           <div>
             <div class="brand-title">Decisão & Sabor</div>
-            <div class="brand-subtitle">Lanchonete IHC</div>
+            <div class="brand-subtitle">Lanchonete IIA</div>
           </div>
         </a>
 
@@ -996,7 +996,7 @@
                   d="M4 3h16c1.1 0 2 .9 2 2v14c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V5c0-1.1.9-2 2-2zm0 4h4v4H4V7zm6 0h4v4h-4V7zm6 0h4v4h-4V7zM4 13h4v4H4v-4zm6 0h4v4h-4v-4zm6 0h4v4h-4v-4z"
                 />
               </svg>
-              <span>Matriz IHC</span>
+              <span>Matriz IIA</span>
             </button>
           </nav>
 
@@ -1038,14 +1038,14 @@
 
     <!-- MAIN APP CONTENT -->
     <main class="main-content">
-      <!-- VIEW 1: RECOMENDADOR IHC (WIZARD) -->
+      <!-- VIEW 1: RECOMENDADOR IIA (WIZARD) -->
       <section id="view-wizard" class="view-section active">
         <div class="section-header">
-          <span class="section-tag">Interação Humano-Computador</span>
+          <span class="section-tag">Introdução à Inteligência Artificial</span>
           <h2 class="section-title">O que você gostaria de comer?</h2>
           <p class="section-desc">
             Selecione seus critérios no quiz de decisão e descubra a
-            recomendação exata da matriz IHC.
+            recomendação exata da matriz IIA.
           </p>
         </div>
 
@@ -1250,19 +1250,19 @@
         </div>
       </section>
 
-      <!-- VIEW 3: MATRIZ IHC (TABELA ORIGINAL) -->
+      <!-- VIEW 3: MATRIZ IIA (TABELA ORIGINAL) -->
       <section id="view-table" class="view-section">
         <div class="section-header">
-          <h2 class="section-title">Matriz de Decisão IHC</h2>
+          <h2 class="section-title">Matriz de Decisão IIA</h2>
           <p class="section-desc">
-            Representação fiel em tabela estruturada da aula de Interação
-            Humano-Computador.
+            Representação fiel em tabela estruturada da aula de Introdução à
+            Inteligência Artificial.
           </p>
         </div>
 
         <div class="table-wrapper">
           <div class="table-responsive">
-            <table class="ihc-table">
+            <table class="iia-table">
               <thead>
                 <tr>
                   <th>#</th>
@@ -1274,7 +1274,7 @@
                   <th>Ação</th>
                 </tr>
               </thead>
-              <tbody id="ihc-table-body">
+              <tbody id="iia-table-body">
                 <!-- Dynamically populated via JS -->
               </tbody>
             </table>
@@ -1323,9 +1323,9 @@
     <!-- NATIVE JAVASCRIPT LOGIC -->
     <script>
       /* ==========================================================================
-           1. DATABASE: 17 ITEMS FROM IHC DECISION MATRIX (COM IMAGENS)
+           1. DATABASE: 17 ITEMS FROM IIA DECISION MATRIX (COM IMAGENS)
            ========================================================================== */
-      const ihcData = [
+      const iiaData = [
         {
           id: 1,
           sabor: "Salgado",
@@ -1511,7 +1511,7 @@
           prato: "MINGAU COM SAL",
           preco: 0.0,
           imagem: "img/mingau.jpg",
-          desc: "A exótica e icônica iguaria da aula de IHC!",
+          desc: "A exótica e icônica iguaria da aula de IIA!",
         },
       ];
 
@@ -1648,7 +1648,7 @@
       }
 
       function calculateWizardResult() {
-        const match = ihcData.find(
+        const match = iiaData.find(
           (item) =>
             item.sabor === wizardSelections.sabor &&
             item.valor === wizardSelections.valor &&
@@ -1688,7 +1688,7 @@
                               isMeme
                                 ? `
                                 <div class="meme-alert">
-                                    ⚠️ <strong>SISTEMA IHC:</strong> Combinação lendária identificada! O famoso Mingau com Sal da aula de IHC. Serve tanto para alimentar quanto para testar seus limites de paladar!
+                                    ⚠️ <strong>SISTEMA IIA:</strong> Combinação lendária identificada! O famoso Mingau com Sal da aula de IIA. Serve tanto para alimentar quanto para testar seus limites de paladar!
                                 </div>
                             `
                                 : ""
@@ -1721,7 +1721,7 @@
       /* ==========================================================================
            6. MENU CARD DISPLAY & FILTERS
            ========================================================================== */
-      function renderMenu(items = ihcData) {
+      function renderMenu(items = iiaData) {
         const grid = document.getElementById("menu-grid");
         grid.innerHTML = "";
 
@@ -1760,7 +1760,7 @@
         const sabor = document.getElementById("filter-sabor").value;
         const valor = document.getElementById("filter-valor").value;
 
-        const filtered = ihcData.filter((item) => {
+        const filtered = iiaData.filter((item) => {
           const matchesSearch = item.prato.toLowerCase().includes(search);
           const matchesSabor = !sabor || item.sabor === sabor;
           const matchesValor = !valor || item.valor === valor;
@@ -1771,13 +1771,13 @@
       }
 
       /* ==========================================================================
-           7. MATRIZ IHC TABLE DISPLAY
+           7. MATRIZ IIA TABLE DISPLAY
            ========================================================================== */
       function renderTable() {
-        const tbody = document.getElementById("ihc-table-body");
+        const tbody = document.getElementById("iia-table-body");
         tbody.innerHTML = "";
 
-        ihcData.forEach((row) => {
+        iiaData.forEach((row) => {
           const tr = document.createElement("tr");
           if (row.prato === "MINGAU COM SAL") tr.className = "row-meme";
 
@@ -1816,7 +1816,7 @@
       }
 
       function addToCart(itemId) {
-        const item = ihcData.find((i) => i.id === itemId);
+        const item = iiaData.find((i) => i.id === itemId);
         if (!item) return;
 
         const existing = cart.find((c) => c.id === itemId);
@@ -1889,7 +1889,7 @@
       function checkout() {
         if (cart.length === 0) return;
         alert(
-          "Pedido simulado com sucesso! Obrigado por utilizar o sistema de recomendação IHC.",
+          "Pedido simulado com sucesso! Obrigado por utilizar o sistema de recomendação IIA.",
         );
         cart = [];
         updateCart();
